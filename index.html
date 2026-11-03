@@ -19,7 +19,7 @@
   <meta property="og:image" content="https://doce-afeto-liard.vercel.app/img/og-trufas.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Trufas de chocolate com fios de chocolate por cima">
+  <meta property="og:image:alt" content="Trufas de chocolate em forminhas, uma delas cortada mostrando a ganache">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2335170F'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-style='italic' font-size='40' fill='%23D9B99A' text-anchor='middle'%3Ed%3C/text%3E%3C/svg%3E">
@@ -27,7 +27,7 @@
   <link rel="preload" href="fonts/dm-serif-display.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" as="image" href="img/trufa-hero-800.webp"
-        imagesrcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w"
+        imagesrcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w, img/trufa-hero-1536.webp 1536w"
         imagesizes="(min-width: 960px) 50vw, 100vw" fetchpriority="high">
 
   <script type="application/ld+json">
@@ -148,7 +148,7 @@
     /* ================= Hero ================= */
     .hero { display: grid; }
     .hero-foto { position: relative; order: -1; aspect-ratio: 16 / 10; overflow: hidden; background: var(--marrom); margin: 0; }
-    .hero-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; }
+    .hero-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
     .legenda { position: absolute; right: 10px; bottom: 8px; font-size: .7rem; color: rgba(255,252,248,.78); }
     .hero-texto { padding: 28px var(--gutter) 56px; max-width: 640px; }
     h1 { font-size: clamp(2.3rem, 9.6vw, 4.7rem); line-height: 1.03; letter-spacing: -.012em; max-width: 14ch; text-wrap: balance; }
@@ -329,11 +329,10 @@
         </div>
       </div>
       <figure class="hero-foto">
-        <!-- FOTO PROVISÓRIA (banco de imagens). Troque pelos arquivos reais mantendo os nomes trufa-hero-480/800/1200.webp -->
         <img src="img/trufa-hero-800.webp"
-             srcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w"
+             srcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w, img/trufa-hero-1536.webp 1536w"
              sizes="(min-width: 960px) 50vw, 100vw"
-             alt="Trufas de chocolate com fios de chocolate por cima" width="1200" height="800"
+             alt="Trufas de chocolate em forminhas, uma delas cortada mostrando a ganache" width="1536" height="1024"
              fetchpriority="high" decoding="async">
         <figcaption class="legenda">Imagem ilustrativa</figcaption>
       </figure>
@@ -347,15 +346,12 @@
           <p>Todos a R$ 4,99. Adicione quantos quiser e finalize pelo WhatsApp.</p>
         </div>
 
-        <!--
-          FOTOS DOS SABORES: quando tiver a foto real de um sabor, salve em img/sabores/ (ex.: tradicional-800.webp,
-          proporção 1:1, ex.: 800x800) e descomente a linha <img> do card. A foto cobre o rótulo automaticamente.
-        -->
+        <!-- Fotos dos sabores em img/sabores/ (1:1). Para trocar, substitua os arquivos -480 e -800.webp mantendo os nomes. -->
         <ul class="sabores" id="lista-sabores">
           <li class="sabor" data-sabor="Tradicional">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Tradicional</strong></span>
-              <!-- <img src="img/sabores/tradicional-800.webp" alt="Trufa sabor Tradicional" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/tradicional-480.webp" srcset="img/sabores/tradicional-480.webp 480w, img/sabores/tradicional-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa Tradicional inteira e cortada, com recheio de ganache de chocolate" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -371,7 +367,7 @@
           <li class="sabor" data-sabor="Brigadeiro">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Brigadeiro</strong></span>
-              <!-- <img src="img/sabores/brigadeiro-800.webp" alt="Trufa sabor Brigadeiro" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/brigadeiro-480.webp" srcset="img/sabores/brigadeiro-480.webp 480w, img/sabores/brigadeiro-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Brigadeiro com granulado, inteira e cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -387,7 +383,7 @@
           <li class="sabor" data-sabor="Ninho com Nutella">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Ninho com Nutella</strong></span>
-              <!-- <img src="img/sabores/ninho-com-nutella-800.webp" alt="Trufa sabor Ninho com Nutella" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/ninho-com-nutella-480.webp" srcset="img/sabores/ninho-com-nutella-480.webp 480w, img/sabores/ninho-com-nutella-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Ninho com Nutella, casca branca e centro de creme de avelã" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -403,7 +399,7 @@
           <li class="sabor" data-sabor="Maracujá">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Maracujá</strong></span>
-              <!-- <img src="img/sabores/maracuja-800.webp" alt="Trufa sabor Maracujá" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/maracuja-480.webp" srcset="img/sabores/maracuja-480.webp 480w, img/sabores/maracuja-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Maracujá cortada, com recheio amarelo cremoso" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -419,7 +415,7 @@
           <li class="sabor" data-sabor="Morango">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Morango</strong></span>
-              <!-- <img src="img/sabores/morango-800.webp" alt="Trufa sabor Morango" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/morango-480.webp" srcset="img/sabores/morango-480.webp 480w, img/sabores/morango-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Morango cortada, com recheio rosado cremoso" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -435,7 +431,7 @@
           <li class="sabor" data-sabor="Coco">
             <div class="sabor-foto">
               <span class="rotulo" aria-hidden="true"><strong>Coco</strong></span>
-              <!-- <img src="img/sabores/coco-800.webp" alt="Trufa sabor Coco" width="800" height="800" loading="lazy" decoding="async"> -->
+              <img src="img/sabores/coco-480.webp" srcset="img/sabores/coco-480.webp 480w, img/sabores/coco-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Coco coberta com coco ralado, inteira e cortada" width="800" height="800" loading="lazy" decoding="async">
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
@@ -458,22 +454,21 @@
         <div class="secao-cabeca">
           <h2 id="t-galeria">Feitas à mão, uma a uma.</h2>
         </div>
-        <!-- FOTOS PROVISÓRIAS (banco de imagens). Substitua pelos arquivos reais mantendo os nomes. -->
         <div class="mosaico">
           <figure class="grande">
             <img src="img/trufas-caixa-800.webp" srcset="img/trufas-caixa-480.webp 480w, img/trufas-caixa-800.webp 800w, img/trufas-caixa-1200.webp 1200w"
                  sizes="(min-width: 1200px) 660px, (min-width: 960px) 56vw, 100vw"
-                 alt="Trufas de chocolate em uma caixa de madeira, algumas cortadas ao meio" width="800" height="800" loading="lazy" decoding="async">
+                 alt="Caixa com nove trufas de sabores variados, vista de cima" width="800" height="800" loading="lazy" decoding="async">
           </figure>
           <figure>
-            <img src="img/trufas-cacau-480.webp" srcset="img/trufas-cacau-480.webp 480w, img/trufas-cacau-800.webp 800w"
+            <img src="img/trufas-cacau-480.webp" srcset="img/trufas-cacau-480.webp 480w, img/trufas-cacau-800.webp 800w, img/trufas-cacau-1200.webp 1200w"
                  sizes="(min-width: 1200px) 480px, (min-width: 960px) 40vw, 50vw"
-                 alt="Trufas polvilhadas com cacau em pó" width="800" height="800" loading="lazy" decoding="async">
+                 alt="Trufa cortada ao meio mostrando a ganache cremosa" width="800" height="800" loading="lazy" decoding="async">
           </figure>
           <figure>
-            <img src="img/trufas-forminhas-480.webp" srcset="img/trufas-forminhas-480.webp 480w, img/trufas-forminhas-800.webp 800w"
+            <img src="img/trufas-forminhas-480.webp" srcset="img/trufas-forminhas-480.webp 480w, img/trufas-forminhas-800.webp 800w, img/trufas-forminhas-1200.webp 1200w"
                  sizes="(min-width: 1200px) 480px, (min-width: 960px) 40vw, 50vw"
-                 alt="Trufas enfileiradas em forminhas de papel" width="800" height="800" loading="lazy" decoding="async">
+                 alt="Trufas de vários sabores enfileiradas em forminhas" width="800" height="800" loading="lazy" decoding="async">
           </figure>
         </div>
         <p class="nota-foto">Imagens ilustrativas.</p>
