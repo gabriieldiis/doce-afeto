@@ -6,7 +6,7 @@
   <title>Trufas artesanais a R$ 4,99 | Doce Afeto</title>
   <meta name="description" content="Trufas feitas à mão por R$ 4,99 cada. Escolha os sabores, monte seu pedido e envie direto pelo WhatsApp.">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <meta name="theme-color" content="#2e1710">
+  <meta name="theme-color" content="#3a180c">
   <meta name="format-detection" content="telephone=no">
   <!-- Quando publicar, troque SEU-DOMINIO pelo endereço real (canonical e og:image precisam de URL absoluta) -->
   <link rel="canonical" href="https://SEU-DOMINIO/trufas-com-cardapio.html">
@@ -22,14 +22,14 @@
   <meta property="og:image:alt" content="Trufas de chocolate com fios de chocolate por cima">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='34' r='26' fill='%235a2c1d'/%3E%3Ccircle cx='24' cy='26' r='6' fill='%23a8664a'/%3E%3Cpath d='M14 30c8-6 28-6 36 0' stroke='%23edba4a' stroke-width='4' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='34' r='26' fill='%237b3f22'/%3E%3Ccircle cx='24' cy='26' r='6' fill='%23c8743c'/%3E%3Cpath d='M14 30c8-6 28-6 36 0' stroke='%23ffa600' stroke-width='4' fill='none'/%3E%3C/svg%3E">
 
   <link rel="preload" as="image" href="img/trufa-hero-800.webp"
         imagesrcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w"
-        imagesizes="(min-width: 720px) 46vw, 100vw" fetchpriority="high">
+        imagesizes="(min-width: 860px) 480px, 100vw" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito:wght@400;600;800&display=swap">
 
   <script type="application/ld+json">
   {
@@ -49,220 +49,200 @@
   }
   </script>
 
-  <!-- Liga as animações só se o JS rodar e a pessoa não pediu "reduzir movimento" -->
-  <script>
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('anim');
-      setTimeout(function () { if (!window.anime) document.documentElement.classList.remove('anim'); }, 3000);
-    }
-  </script>
-
   <style>
     :root {
-      --cacau: #2e1710;
-      --ganache: #5a2c1d;
-      --kraft: #e9d3b8;
-      --kraft-escuro: #d9bc98;
-      --papel: #f7ede1;
-      --foil: #d93a6e;
-      --foil-escuro: #b82a59;
-      --ouro: #edba4a;
-      --texto-suave: #6b4637;
+      --chocolate: #3a180c;   /* barras e rodapé */
+      --ao-leite: #7b3f22;    /* chocolate ao leite */
+      --caramelo: #c8743c;
+      --pessego: #fcdec6;
+      --creme: #f9f6f2;       /* fundo da página */
+      --branco: #ffffff;
+      --ambar: #ffa600;       /* ação principal */
+      --ambar-escuro: #e89400;
+      --texto: #2a1a12;
+      --texto-suave: #6e5446;
+      --linha: #eadfd5;
       --gutter: 16px;
-      --barra-h: 76px;
+      --raio: 16px;
     }
 
     /* ---------- Base + trava do scroll lateral ---------- */
     *, *::before, *::after { box-sizing: border-box; }
     html, body { max-width: 100%; overflow-x: hidden; overflow-x: clip; }
-    html { scroll-behavior: smooth; scroll-padding-top: 12px; -webkit-text-size-adjust: 100%; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; -webkit-text-size-adjust: 100%; }
     body {
       margin: 0; min-width: 320px;
-      color: var(--cacau); background: var(--kraft);
-      font: 400 1rem/1.55 "Bricolage Grotesque", system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -webkit-tap-highlight-color: transparent;
+      color: var(--texto); background: var(--creme);
+      font: 400 1rem/1.55 "Nunito", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
     }
     img { display: block; max-width: 100%; height: auto; }
     a { color: inherit; }
-    button { font: inherit; }
-    :focus-visible { outline: 3px solid var(--ouro); outline-offset: 3px; border-radius: 8px; }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid var(--ambar); outline-offset: 3px; border-radius: 10px; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
     .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+    .titulo { font-family: "Fraunces", Georgia, serif; font-weight: 800; letter-spacing: -.02em; font-variation-settings: "opsz" 120; }
 
     /* ---------- Botões ---------- */
     .btn {
+      position: relative;
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      min-height: 54px; padding: 0 26px; border: 0; border-radius: 999px;
-      background: var(--foil); color: #fff; text-decoration: none;
-      font-weight: 800; font-size: 1.02rem; line-height: 1; cursor: pointer;
-      transition: background-color .2s;
-      touch-action: manipulation;
+      min-height: 52px; padding: 0 24px; border: 0; border-radius: 10px;
+      background: var(--ambar); color: var(--chocolate); text-decoration: none;
+      font-weight: 800; font-size: 1rem; line-height: 1; cursor: pointer;
+      transition: background-color .2s; touch-action: manipulation;
     }
-    .btn:hover { background: var(--foil-escuro); }
+    .btn:hover { background: var(--ambar-escuro); }
     .btn svg { width: 20px; height: 20px; flex: none; }
+    .btn-contorno { background: transparent; box-shadow: inset 0 0 0 2px var(--ao-leite); color: var(--ao-leite); }
+    .btn-contorno:hover { background: var(--pessego); }
+    /* anel que "respira" no botão principal (animado pelo anime.js) */
+    .pulso { position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 3px var(--ambar); opacity: 0; pointer-events: none; }
 
-    /* ---------- Hero ---------- */
-    .hero { background: var(--cacau); color: var(--papel); padding: 16px 0 52px; }
-    .topo { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
-    .marca { font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; text-decoration: none; }
-    .marca span { color: var(--ouro); }
-    .topo nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; font-size: .92rem; color: #e8cdbd; text-decoration: none; }
-    .topo nav a:hover { color: var(--papel); }
+    /* ---------- Barra superior ---------- */
+    .topo { position: sticky; top: 0; z-index: 20; background: var(--chocolate); color: var(--pessego); }
+    .topo .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 60px; gap: 16px; }
+    .marca { font-family: "Fraunces", Georgia, serif; font-weight: 800; font-size: 1.3rem; text-decoration: none; color: var(--pessego); letter-spacing: -.01em; }
+    .topo nav { display: flex; align-items: center; gap: 20px; }
+    .topo nav a:not(.btn) { display: none; color: var(--pessego); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .topo nav a:not(.btn):hover { color: var(--branco); }
+    .topo .btn { min-height: 40px; padding: 0 16px; font-size: .9rem; border-radius: 8px; }
 
-    .hero-grid { display: grid; gap: 34px; margin-top: 14px; }
-    .hero-foto { position: relative; }
-    .hero-moldura { position: relative; aspect-ratio: 5 / 4; border-radius: 22px; overflow: hidden; background: var(--ganache); }
-    .hero-moldura img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-    /* Selo de preço: o elemento memorável */
-    .selo {
-      position: absolute; right: 14px; bottom: -26px; margin: 0;
-      width: 116px; height: 116px; border-radius: 50%;
-      display: grid; place-content: center; text-align: center;
-      background: var(--ouro); color: var(--cacau);
-      transform: rotate(-10deg);
-      box-shadow: 0 0 0 6px var(--cacau);
+    /* ---------- Hero: banner arredondado ---------- */
+    .hero { padding: 16px 0 8px; }
+    .banner {
+      position: relative; overflow: hidden; isolation: isolate;
+      display: grid; border-radius: 22px; background: var(--pessego);
     }
-    .selo::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1.5px dashed rgba(46,23,16,.45); }
-    .selo small { font-size: .72rem; font-weight: 600; line-height: 1.1; }
-    .selo strong { font-size: 2.05rem; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
-    .selo sup { font-size: .4em; margin-right: 2px; vertical-align: .9em; letter-spacing: 0; }
+    .banner-onda { position: absolute; z-index: -1; left: 0; bottom: 0; width: 100%; height: 46%; color: var(--ao-leite); }
+    .banner-foto { position: relative; aspect-ratio: 2 / 1; overflow: hidden; }
+    .banner-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .banner-texto { padding: 18px 18px 22px; background: var(--pessego); }
+    .selos { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+    .selos li:nth-child(3) { display: none; }
+    .selos li { padding: 5px 11px; border-radius: 999px; background: var(--branco); color: var(--ao-leite); font-size: .8rem; font-weight: 800; }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 8.4vw, 3.9rem); line-height: 1.02; color: var(--chocolate); text-wrap: balance; }
+    .intro { margin: 0 0 14px; max-width: 42ch; color: var(--texto-suave); font-size: 1.05rem; }
 
-    h1 {
-      margin: 0 0 16px;
-      font-size: clamp(2.7rem, 11.5vw, 5.6rem);
-      font-weight: 800; line-height: .94; letter-spacing: -.045em;
-      font-variation-settings: "opsz" 96;
-      text-wrap: balance;
-    }
-    .intro { margin: 0 0 28px; max-width: 44ch; color: #e8cdbd; font-size: 1.08rem; text-wrap: pretty; }
-    .hero-acoes { display: flex; flex-direction: column; gap: 12px; }
-    .hero-acoes .nota { font-size: .92rem; color: #cfae9c; text-align: center; }
+    /* preço no estilo de etiqueta de loja */
+    .preco-grande { display: flex; align-items: flex-end; gap: 10px; margin: 0 0 16px; }
+    .preco-grande .valor { display: flex; align-items: flex-start; color: var(--chocolate); font-weight: 800; line-height: .85; }
+    .preco-grande .moeda { font-size: 1.1rem; margin: 6px 4px 0 0; }
+    .preco-grande .inteiro { font-family: "Fraunces", Georgia, serif; font-size: 4.2rem; letter-spacing: -.04em; }
+    .preco-grande .centavos { font-size: 1.5rem; margin-top: 4px; }
+    .preco-grande small { color: var(--texto-suave); font-weight: 600; font-size: .9rem; padding-bottom: 4px; }
+    .hero-acoes { display: grid; gap: 10px; }
 
     /* ---------- Seções ---------- */
-    .secao { padding: 72px 0; }
-    .secao + .secao { padding-top: 0; }
-    .secao.reforma { padding-top: 72px; }
-    .secao-cabeca { margin-bottom: 30px; }
-    h2 {
-      margin: 0 0 10px;
-      font-size: clamp(2.1rem, 8.5vw, 3.6rem);
-      font-weight: 800; line-height: 1; letter-spacing: -.04em; text-wrap: balance;
-    }
-    .sub { margin: 0; max-width: 52ch; color: var(--texto-suave); }
+    .secao { padding: 52px 0 8px; }
+    .secao-cabeca { margin-bottom: 18px; }
+    h2 { margin: 0 0 4px; font-size: clamp(1.6rem, 6vw, 2.3rem); line-height: 1.1; color: var(--chocolate); }
+    .sub { margin: 0; color: var(--texto-suave); }
 
-    /* ---------- Cardápio ---------- */
-    .sabores { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+    /* ---------- Cardápio: cards de produto ---------- */
+    .sabores { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .sabor {
-      display: grid; grid-template-columns: 68px 1fr; gap: 14px; align-items: center;
-      padding: 14px; border-radius: 20px; background: var(--papel);
-      box-shadow: inset 0 0 0 2px transparent; transition: box-shadow .2s;
+      display: flex; flex-direction: column; overflow: hidden;
+      border-radius: var(--raio); background: var(--branco);
+      box-shadow: 0 0 0 1px var(--linha); transition: box-shadow .2s;
     }
-    .sabor.ativo { box-shadow: inset 0 0 0 2px var(--foil); }
+    .sabor.ativo { box-shadow: 0 0 0 2px var(--ambar); }
+    .sabor-img { display: grid; place-items: center; aspect-ratio: 4 / 3; background: radial-gradient(circle at 50% 70%, #fff3e8, var(--pessego) 70%); }
     .bola {
-      width: 68px; height: 68px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.38), transparent 42%), var(--cor, var(--ganache));
-      box-shadow: inset -6px -8px 14px rgba(0,0,0,.28);
+      width: 46%; aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(circle at 34% 28%, rgba(255,255,255,.42), transparent 40%), var(--cor, var(--ao-leite));
+      box-shadow: inset -7px -9px 16px rgba(0,0,0,.28), 0 10px 14px -8px rgba(58,24,12,.55);
     }
-    .sabor h3 { margin: 0; font-size: 1.1rem; font-weight: 800; line-height: 1.2; }
-    .sabor p { margin: 2px 0 10px; font-size: .9rem; color: var(--texto-suave); line-height: 1.4; }
-    .qtd { display: flex; align-items: center; gap: 4px; }
-    .qtd button {
-      width: 44px; height: 44px; border-radius: 50%; border: 0;
-      background: var(--kraft); color: var(--cacau);
+    .sabor-info { display: flex; flex-direction: column; flex: 1 1 auto; padding: 12px 12px 14px; }
+    .sabor h3 { margin: 0; font-size: 1rem; font-weight: 800; line-height: 1.2; }
+    .sabor p { margin: 4px 0 10px; font-size: .84rem; color: var(--texto-suave); line-height: 1.35; }
+    .sabor .preco { flex: none; margin: auto 0 10px; font-weight: 800; color: var(--ao-leite); font-size: 1.05rem; }
+    .add, .stepper { height: 42px; }
+    .add {
+      width: 100%; border: 0; border-radius: 10px; background: var(--ambar); color: var(--chocolate);
+      font-weight: 800; font-size: .92rem; cursor: pointer; touch-action: manipulation;
+    }
+    .add:hover { background: var(--ambar-escuro); }
+    .stepper { display: none; align-items: center; justify-content: space-between; border-radius: 10px; background: var(--chocolate); color: var(--branco); }
+    .sabor.ativo .add { display: none; }
+    .sabor.ativo .stepper { display: flex; }
+    .stepper button {
+      width: 44px; height: 42px; border: 0; background: transparent; color: var(--ambar);
       font-weight: 800; font-size: 1.35rem; line-height: 1; cursor: pointer; touch-action: manipulation;
     }
-    .qtd button[data-acao="+"] { background: var(--cacau); color: var(--ouro); }
-    .qtd button:disabled { opacity: .35; cursor: default; }
-    .qtd output { display: inline-block; min-width: 32px; text-align: center; font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-    .qtd .preco { margin-left: auto; font-weight: 600; color: var(--texto-suave); font-size: .9rem; }
+    .stepper output { display: inline-block; font-weight: 800; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
 
-    /* ---------- Galeria: uma caixa de bombons ---------- */
+    /* ---------- Galeria: caixa de bombons ---------- */
     .caixa {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
-      padding: 8px; border-radius: 22px; background: var(--ganache);
-      box-shadow: inset 0 2px 0 rgba(255,255,255,.08), 0 22px 40px -26px rgba(46,23,16,.8);
+      padding: 8px; border-radius: 22px; background: var(--chocolate);
     }
-    .casa { position: relative; aspect-ratio: 1; margin: 0; border-radius: 14px; overflow: hidden; background: var(--cacau); }
+    .casa { position: relative; aspect-ratio: 1; margin: 0; border-radius: 14px; overflow: hidden; background: var(--ao-leite); }
     .casa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .casa-grande { grid-column: span 2; grid-row: span 2; }
 
     /* ---------- Como pedir (sequência real) ---------- */
-    .passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; counter-reset: passo; }
-    .passos li { counter-increment: passo; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+    .passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: passo; }
+    .passos li {
+      counter-increment: passo;
+      display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: center;
+      padding: 16px; border-radius: var(--raio); background: var(--branco); box-shadow: 0 0 0 1px var(--linha);
+    }
     .passos li::before {
       content: counter(passo);
       width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
-      background: var(--cacau); color: var(--ouro); font-weight: 800; font-size: 1.15rem;
+      background: var(--pessego); color: var(--ao-leite); font-family: "Fraunces", Georgia, serif; font-weight: 800; font-size: 1.2rem;
     }
-    .passos strong { display: block; font-size: 1.1rem; }
-    .passos span { color: var(--texto-suave); }
+    .passos strong { display: block; font-size: 1.02rem; }
+    .passos span { color: var(--texto-suave); font-size: .92rem; }
 
-    /* ---------- Bilhete da reforma ---------- */
-    .reforma { background: var(--kraft-escuro); }
-    .bilhete {
-      position: relative; max-width: 560px; margin: 0 auto;
-      padding: 36px 26px 30px; background: var(--papel); border-radius: 4px;
-      transform: rotate(-1.5deg);
-      box-shadow: 0 18px 30px -18px rgba(46,23,16,.55);
-    }
-    .fita {
-      position: absolute; top: -14px; left: 50%; width: 110px; height: 28px; margin-left: -55px;
-      background: rgba(237,186,74,.78); transform: rotate(3deg);
-    }
-    .bilhete p { margin: 0 0 12px; font-family: "Caveat", cursive; font-weight: 500; font-size: 1.65rem; line-height: 1.25; color: var(--ganache); }
-    .bilhete .assina { font-weight: 700; text-align: right; margin: 0; }
+    /* ---------- Bilhete da reforma (bloco comentado no HTML) ---------- */
+    .bilhete { max-width: 640px; margin: 0 auto; padding: 24px; border-radius: var(--raio); background: var(--pessego); color: var(--ao-leite); text-align: center; }
+    .bilhete p { margin: 0; font-weight: 600; }
 
     /* ---------- Rodapé ---------- */
-    footer { background: var(--cacau); color: #cfae9c; padding: 36px 0 calc(var(--barra-h) + 40px + env(safe-area-inset-bottom)); font-size: .9rem; }
-    footer p { margin: 0 0 6px; }
-    footer a { color: var(--ouro); }
+    footer { margin-top: 56px; background: var(--chocolate); color: var(--pessego); padding: 32px 0 calc(110px + env(safe-area-inset-bottom)); font-size: .92rem; }
+    footer .marca { display: inline-block; margin-bottom: 8px; }
+    footer p { margin: 0 0 6px; opacity: .85; }
+    footer a { color: var(--ambar); }
 
     /* ---------- Barra de pedido fixa ---------- */
     .barra {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-      padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
-      background: rgba(46,23,16,.96); color: var(--papel);
-      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+      background: var(--branco); box-shadow: 0 -1px 0 var(--linha), 0 -10px 30px -12px rgba(58,24,12,.25);
     }
     .barra-in { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
     .resumo { flex: 1; min-width: 0; line-height: 1.25; }
-    .resumo strong { display: inline-block; font-size: 1.25rem; color: var(--ouro); font-variant-numeric: tabular-nums; transform-origin: left center; }
-    .resumo span { display: block; font-size: .85rem; color: #cfae9c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .barra .btn { min-height: 50px; padding: 0 20px; }
-
-    /* ---------- Estado inicial das animações (só com .anim) ---------- */
-    .anim [data-anim] { opacity: 0; }
-    .anim #titulo { visibility: hidden; }
-    .anim .hero-moldura { clip-path: inset(0 0 100% 0 round 22px); }
+    .resumo strong { display: inline-block; font-size: 1.3rem; color: var(--chocolate); font-weight: 800; font-variant-numeric: tabular-nums; transform-origin: left center; }
+    .resumo span { display: block; font-size: .84rem; color: var(--texto-suave); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* ---------- Tablet / desktop ---------- */
-    @media (min-width: 720px) {
+    @media (min-width: 600px) {
+      .sabores { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 860px) {
       :root { --gutter: 32px; }
-      .hero { padding: 24px 0 88px; }
-      .hero-grid { grid-template-columns: 1.08fr .92fr; align-items: center; gap: 64px; margin-top: 40px; }
-      .hero-texto { order: -1; }
-      .hero-moldura { aspect-ratio: 4 / 5; }
-      .hero-acoes { flex-direction: row; align-items: center; gap: 18px; }
-      .hero-acoes .nota { text-align: left; }
-      .selo { width: 140px; height: 140px; left: -44px; right: auto; bottom: 36px; }
-      .selo strong { font-size: 2.55rem; }
-      .secao { padding: 104px 0; }
-      .secao.reforma { padding-top: 104px; }
-      .secao-cabeca { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 36px; }
-      .secao-cabeca h2 { margin: 0; }
-      .secao-cabeca .sub { text-align: right; max-width: 34ch; }
-      .sabores { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .topo nav a:not(.btn) { display: inline; }
+      .hero { padding-top: 24px; }
+      .banner { grid-template-columns: 1.15fr 1fr; min-height: 440px; }
+      .banner-texto { order: -1; align-self: center; padding: 44px 0 52px 52px; background: transparent; }
+      .banner-foto { aspect-ratio: auto; margin: 22px; border-radius: 18px; }
+      .banner-onda { height: 58%; }
+      .selos li:nth-child(3) { display: list-item; }
+      .banner-texto h1, .banner-texto .intro { color: var(--chocolate); }
+      .hero-acoes { grid-auto-flow: column; justify-content: start; }
+      .secao { padding-top: 72px; }
+      .secao-cabeca { margin-bottom: 22px; }
+      .sabores { gap: 16px; }
       .caixa { grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px; border-radius: 26px; }
-      .passos { grid-template-columns: repeat(3, 1fr); gap: 32px; }
-      .bilhete { padding: 48px 48px 40px; }
-      .bilhete p { font-size: 1.95rem; }
+      .passos { grid-template-columns: repeat(3, 1fr); gap: 16px; }
     }
     @media (min-width: 1024px) {
-      .sabores { grid-template-columns: repeat(3, 1fr); }
+      .sabores { grid-template-columns: repeat(6, 1fr); }
     }
   </style>
 </head>
@@ -271,93 +251,123 @@
   <!-- FOTOS: provisórias do Pexels (licença gratuita). Para usar as suas, troque os arquivos da pasta img/ mantendo os mesmos nomes
        (o .jpg original e as versões -480/-800/-1200.webp). -->
 
-  <header class="hero">
+  <header class="topo">
     <div class="wrap">
-      <div class="topo">
-        <a class="marca" href="#" aria-label="Doce Afeto, início">Doce <span>Afeto</span></a>
-        <nav aria-label="Atalhos"><a href="#sabores">Ver sabores</a></nav>
-      </div>
-
-      <div class="hero-grid">
-        <div class="hero-foto">
-          <div class="hero-moldura">
-            <img src="img/trufa-hero-800.webp"
-                 srcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w"
-                 sizes="(min-width: 720px) 46vw, 100vw"
-                 alt="Trufas de chocolate com fios de chocolate por cima" width="800" height="1000"
-                 fetchpriority="high" decoding="async">
-          </div>
-          <p class="selo" data-anim aria-label="R$ 4,99 cada trufa"><small>cada uma</small><strong><sup>R$</sup>4,99</strong></p>
-        </div>
-
-        <div class="hero-texto">
-          <h1 id="titulo">Trufas feitas à mão, uma por uma.</h1>
-          <p class="intro" data-anim>Chocolate de verdade, recheio cremoso e casquinha que quebra na mordida. Escolha seus sabores aqui e mande o pedido direto no meu WhatsApp.</p>
-          <div class="hero-acoes" data-anim>
-            <a class="btn" href="#sabores">Escolher sabores</a>
-            <span class="nota">Todas custam R$ 4,99</span>
-          </div>
-        </div>
-      </div>
+      <a class="marca" href="#" aria-label="Doce Afeto, início">Doce Afeto</a>
+      <nav aria-label="Principal">
+        <a href="#sabores">Sabores</a>
+        <a href="#como-pedir">Como pedir</a>
+        <a class="btn" href="#sabores">Montar pedido</a>
+      </nav>
     </div>
   </header>
 
   <main>
+    <section class="hero" aria-labelledby="titulo">
+      <div class="wrap">
+        <div class="banner">
+          <!-- onda de chocolate ao fundo -->
+          <svg class="banner-onda" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+            <path fill="currentColor" d="M0 120 C 180 40, 360 200, 600 110 S 1000 30, 1200 120 L 1200 300 L 0 300 Z" opacity=".14"/>
+            <path class="onda-frente" fill="currentColor" d="M0 190 C 220 120, 420 260, 640 180 S 1020 120, 1200 200 L 1200 300 L 0 300 Z" opacity=".22"/>
+          </svg>
+
+          <div class="banner-foto">
+            <img src="img/trufa-hero-800.webp"
+                 srcset="img/trufa-hero-480.webp 480w, img/trufa-hero-800.webp 800w, img/trufa-hero-1200.webp 1200w"
+                 sizes="(min-width: 860px) 480px, 100vw"
+                 alt="Trufas de chocolate com fios de chocolate por cima" width="800" height="550"
+                 fetchpriority="high" decoding="async">
+          </div>
+
+          <div class="banner-texto">
+            <ul class="selos" aria-label="Destaques">
+              <li>Feitas à mão</li>
+              <li>6 sabores</li>
+              <li>Pedido pelo WhatsApp</li>
+            </ul>
+            <h1 id="titulo" class="titulo">Trufas artesanais para adoçar o seu dia</h1>
+            <p class="intro">Chocolate cremoso por dentro, casquinha que quebra na mordida. Escolha os sabores e envie o pedido em menos de um minuto.</p>
+            <p class="preco-grande" aria-label="R$ 4,99 cada">
+              <span class="valor" aria-hidden="true"><span class="moeda">R$</span><span class="inteiro">4</span><span class="centavos">,99</span></span>
+              <small aria-hidden="true">cada trufa</small>
+            </p>
+            <div class="hero-acoes">
+              <a class="btn" href="#sabores"><span class="pulso" aria-hidden="true"></span>Escolher sabores</a>
+              <a class="btn btn-contorno" href="https://wa.me/5511964562656?text=Oi!%20Quero%20pedir%20trufas." target="_blank" rel="noopener">Falar no WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="secao" id="sabores" aria-labelledby="t-sabores">
       <div class="wrap">
         <div class="secao-cabeca">
-          <h2 id="t-sabores">Escolha seus sabores</h2>
-          <p class="sub">Toque no + para montar seu pedido. O total aparece na barra lá embaixo.</p>
+          <h2 id="t-sabores" class="titulo">Escolha seus sabores</h2>
+          <p class="sub">Todas por R$ 4,99. O total aparece na barra abaixo.</p>
         </div>
 
         <!-- Edite os sabores aqui: data-sabor, nome, descrição e a cor da bolinha (--cor) -->
         <ul class="sabores" id="lista-sabores">
           <li class="sabor" data-sabor="Tradicional">
-            <div class="bola" style="--cor:#4a2418" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#4a2418" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Tradicional</h3>
               <p>Ganache de chocolate meio amargo.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Tradicional">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Tradicional">+</button><span class="preco">R$ 4,99</span></div>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Tradicional">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Tradicional">+</button></div>
             </div>
           </li>
           <li class="sabor" data-sabor="Brigadeiro">
-            <div class="bola" style="--cor:#3a1c12" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#3a1c12" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Brigadeiro</h3>
               <p>Recheio de brigadeiro de colher.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Brigadeiro">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Brigadeiro">+</button><span class="preco">R$ 4,99</span></div>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Brigadeiro">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Brigadeiro">+</button></div>
             </div>
           </li>
           <li class="sabor" data-sabor="Ninho com Nutella">
-            <div class="bola" style="--cor:#e9dccb" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#eadfcf" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Ninho com Nutella</h3>
-              <p>Creme de leite Ninho com centro de Nutella.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Ninho com Nutella">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Ninho com Nutella">+</button><span class="preco">R$ 4,99</span></div>
+              <p>Creme de Ninho com centro de Nutella.</p>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Ninho com Nutella">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Ninho com Nutella">+</button></div>
             </div>
           </li>
           <li class="sabor" data-sabor="Maracujá">
-            <div class="bola" style="--cor:#e8b23a" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#e8b23a" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Maracujá</h3>
               <p>Ganache azedinha de maracujá.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Maracujá">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Maracujá">+</button><span class="preco">R$ 4,99</span></div>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Maracujá">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Maracujá">+</button></div>
             </div>
           </li>
           <li class="sabor" data-sabor="Morango">
-            <div class="bola" style="--cor:#d9506f" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#d9506f" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Morango</h3>
               <p>Recheio cremoso de morango.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Morango">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Morango">+</button><span class="preco">R$ 4,99</span></div>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Morango">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Morango">+</button></div>
             </div>
           </li>
           <li class="sabor" data-sabor="Coco">
-            <div class="bola" style="--cor:#f3ece2" aria-hidden="true"></div>
-            <div>
+            <div class="sabor-img"><span class="bola" style="--cor:#f3ece2" aria-hidden="true"></span></div>
+            <div class="sabor-info">
               <h3>Coco</h3>
               <p>Beijinho cremoso com coco ralado.</p>
-              <div class="qtd"><button type="button" data-acao="-" aria-label="Tirar uma Coco">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar uma Coco">+</button><span class="preco">R$ 4,99</span></div>
+              <p class="preco">R$ 4,99</p>
+              <button type="button" class="add" data-acao="+">Adicionar</button>
+              <div class="stepper"><button type="button" data-acao="-" aria-label="Tirar uma Coco">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Coco">+</button></div>
             </div>
           </li>
         </ul>
@@ -367,33 +377,33 @@
     <section class="secao" aria-labelledby="t-galeria">
       <div class="wrap">
         <div class="secao-cabeca">
-          <h2 id="t-galeria">Do jeitinho que chega até você</h2>
+          <h2 id="t-galeria" class="titulo">Do jeitinho que chega até você</h2>
           <p class="sub">Feitas em pequenas fornadas, embaladas uma a uma.</p>
         </div>
-        <div class="caixa" id="caixa">
+        <div class="caixa">
           <figure class="casa casa-grande">
             <img src="img/trufas-caixa-800.webp" srcset="img/trufas-caixa-480.webp 480w, img/trufas-caixa-800.webp 800w, img/trufas-caixa-1200.webp 1200w"
-                 sizes="(min-width: 1120px) 540px, (min-width: 720px) 48vw, 100vw"
+                 sizes="(min-width: 1120px) 540px, (min-width: 860px) 48vw, 100vw"
                  alt="Trufas de chocolate em uma caixa de madeira, algumas cortadas ao meio" width="800" height="800" loading="lazy" decoding="async">
           </figure>
           <figure class="casa">
             <img src="img/trufas-forminhas-480.webp" srcset="img/trufas-forminhas-480.webp 480w, img/trufas-forminhas-800.webp 800w"
-                 sizes="(min-width: 1120px) 265px, (min-width: 720px) 24vw, 50vw"
+                 sizes="(min-width: 1120px) 265px, (min-width: 860px) 24vw, 50vw"
                  alt="Trufas enfileiradas em forminhas de papel branco" width="480" height="320" loading="lazy" decoding="async">
           </figure>
           <figure class="casa">
             <img src="img/trufas-rosa-480.webp" srcset="img/trufas-rosa-480.webp 480w, img/trufas-rosa-800.webp 800w"
-                 sizes="(min-width: 1120px) 265px, (min-width: 720px) 24vw, 50vw"
+                 sizes="(min-width: 1120px) 265px, (min-width: 860px) 24vw, 50vw"
                  alt="Trufas em forminhas floridas sobre fundo rosa" width="480" height="320" loading="lazy" decoding="async">
           </figure>
           <figure class="casa">
             <img src="img/trufas-cacau-480.webp" srcset="img/trufas-cacau-480.webp 480w, img/trufas-cacau-800.webp 800w"
-                 sizes="(min-width: 1120px) 265px, (min-width: 720px) 24vw, 50vw"
+                 sizes="(min-width: 1120px) 265px, (min-width: 860px) 24vw, 50vw"
                  alt="Trufas polvilhadas com cacau em pó" width="480" height="320" loading="lazy" decoding="async">
           </figure>
           <figure class="casa">
             <img src="img/trufas-forminha-dourada-480.webp" srcset="img/trufas-forminha-dourada-480.webp 480w, img/trufas-forminha-dourada-800.webp 800w"
-                 sizes="(min-width: 1120px) 265px, (min-width: 720px) 24vw, 50vw"
+                 sizes="(min-width: 1120px) 265px, (min-width: 860px) 24vw, 50vw"
                  alt="Trufas em forminha dourada" width="480" height="480" loading="lazy" decoding="async">
           </figure>
         </div>
@@ -403,33 +413,33 @@
     <section class="secao" id="como-pedir" aria-labelledby="t-passos">
       <div class="wrap">
         <div class="secao-cabeca">
-          <h2 id="t-passos">Como pedir</h2>
+          <h2 id="t-passos" class="titulo">Como pedir</h2>
           <p class="sub">Leva menos de um minuto.</p>
         </div>
         <ol class="passos">
-          <li><div><strong>Escolha os sabores</strong><span>Use o + e o − em cada sabor.</span></div></li>
+          <li><div><strong>Escolha os sabores</strong><span>Toque em Adicionar em cada sabor.</span></div></li>
           <li><div><strong>Envie pelo WhatsApp</strong><span>A mensagem já vai pronta com sabores e total.</span></div></li>
           <li><div><strong>Combine a entrega</strong><span>A gente acerta o pagamento e onde você retira.</span></div></li>
         </ol>
       </div>
     </section>
 
-    <section class="secao reforma" aria-labelledby="t-reforma">
+    <!-- BLOCO DA REFORMA: pronto, mas desativado. Para mostrar, apague esta linha e a linha "FIM DO BLOCO" lá embaixo.
+    <section class="secao" aria-labelledby="t-reforma">
       <div class="wrap">
         <h2 id="t-reforma" class="sr-only">Por que estou vendendo trufas</h2>
-        <div class="bilhete" id="bilhete">
-          <span class="fita" aria-hidden="true"></span>
-          <p>Estou vendendo essas trufas para ajudar na reforma da minha casa.</p>
-          <p>Cada trufa que você leva vira um pedacinho dessa obra. Obrigado de coração pelo apoio!</p>
-          <p class="assina">— Doce Afeto</p>
+        <div class="bilhete">
+          <p>Cada trufa vendida ajuda na reforma da minha casa. Obrigado pelo apoio!</p>
         </div>
       </div>
     </section>
+    FIM DO BLOCO DA REFORMA -->
   </main>
 
   <footer>
     <div class="wrap">
-      <p>Doce Afeto, trufas artesanais a R$ 4,99.</p>
+      <span class="marca">Doce Afeto</span>
+      <p>Trufas artesanais a R$ 4,99.</p>
       <p>Pedidos pelo WhatsApp <a href="https://wa.me/5511964562656" target="_blank" rel="noopener">(11) 96456-2656</a></p>
     </div>
   </footer>
@@ -441,6 +451,7 @@
         <span id="itens" aria-live="polite">Nenhuma trufa escolhida</span>
       </div>
       <a class="btn" id="enviar" href="https://wa.me/5511964562656" target="_blank" rel="noopener">
+        <span class="pulso" aria-hidden="true"></span>
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3 1 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
         <span id="enviar-txt">Pedir</span>
       </a>
@@ -451,115 +462,78 @@
   <script src="js/anime.min.js" defer></script>
   <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var FONE = '5511964562656';
-    var CENTAVOS = 499; // preço por trufa em centavos
     var A = window.anime;
-    var root = document.documentElement;
-    var animar = !!A && root.classList.contains('anim');
-    if (!A) root.classList.remove('anim');
+    var animar = !!A && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ---------- Pedido ---------- */
     var lista = document.getElementById('lista-sabores');
     if (lista) {
-    var itens = document.querySelectorAll('.sabor');
-    var totalEl = document.getElementById('total');
-    var itensEl = document.getElementById('itens');
-    var enviar = document.getElementById('enviar');
-    var enviarTxt = document.getElementById('enviar-txt');
-    var brl = function (v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
-    var contador = { v: 0 };
-    var primeira = true;
+      var FONE = '5511964562656';
+      var CENTAVOS = 499; // preço por trufa em centavos
+      var itens = lista.querySelectorAll('.sabor');
+      var totalEl = document.getElementById('total');
+      var itensEl = document.getElementById('itens');
+      var enviar = document.getElementById('enviar');
+      var enviarTxt = document.getElementById('enviar-txt');
+      var brl = function (v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
+      var contador = { v: 0 };
+      var primeira = true;
 
-    function atualizar() {
-      var linhas = [], qtd = 0;
-      itens.forEach(function (li) {
-        var q = +li.querySelector('output').value;
-        li.querySelector('[data-acao="-"]').disabled = q === 0;
-        li.classList.toggle('ativo', q > 0);
-        if (q > 0) { linhas.push(q + 'x ' + li.dataset.sabor); qtd += q; }
+      var atualizar = function () {
+        var linhas = [], qtd = 0;
+        itens.forEach(function (li) {
+          var q = +li.querySelector('output').value;
+          li.classList.toggle('ativo', q > 0);
+          if (q > 0) { linhas.push(q + 'x ' + li.dataset.sabor); qtd += q; }
+        });
+        var total = qtd * CENTAVOS / 100;
+        if (animar && !primeira) {
+          A.animate(contador, { v: total, duration: 400, ease: 'outQuad',
+            onUpdate: function () { totalEl.textContent = brl(contador.v); },
+            onComplete: function () { totalEl.textContent = brl(total); } });
+        } else {
+          contador.v = total; totalEl.textContent = brl(total);
+        }
+        primeira = false;
+        itensEl.textContent = qtd ? qtd + (qtd === 1 ? ' trufa: ' : ' trufas: ') + linhas.join(', ') : 'Nenhuma trufa escolhida';
+        var msg = qtd
+          ? 'Oi! Quero pedir trufas:\n' + linhas.map(function (l) { return '• ' + l; }).join('\n') + '\nTotal: ' + brl(total)
+          : 'Oi! Quero pedir trufas. Quais sabores tem hoje?';
+        enviar.href = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
+        enviarTxt.textContent = qtd ? 'Enviar pedido' : 'Pedir';
+      };
+
+      lista.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-acao]');
+        if (!btn) return;
+        var li = btn.closest('.sabor');
+        var out = li.querySelector('output');
+        var eraAdd = btn.classList.contains('add');
+        var mais = btn.dataset.acao === '+';
+        out.value = Math.max(0, Math.min(99, +out.value + (mais ? 1 : -1)));
+        atualizar();
+        // mantém o foco do teclado num lugar visível quando o botão troca
+        if (eraAdd) li.querySelector('.stepper [data-acao="+"]').focus();
+        else if (+out.value === 0) li.querySelector('.add').focus();
+        if (animar) {
+          A.animate(li.querySelector('.bola'), { scale: mais ? [1, 1.06, 1] : [1, .94, 1], duration: 360, ease: 'outQuad' });
+        }
       });
-      var total = qtd * CENTAVOS / 100;
 
-      if (animar && !primeira) {
-        A.animate(contador, { v: total, duration: 450, ease: 'outExpo',
-          onUpdate: function () { totalEl.textContent = brl(contador.v); },
-          onComplete: function () { totalEl.textContent = brl(total); } });
-        A.animate(totalEl, { scale: [1.18, 1], duration: 380, ease: 'outBack(2)' });
-      } else {
-        contador.v = total;
-        totalEl.textContent = brl(total);
-      }
-      primeira = false;
-      itensEl.textContent = qtd
-        ? qtd + (qtd === 1 ? ' trufa: ' : ' trufas: ') + linhas.join(', ')
-        : 'Nenhuma trufa escolhida';
-
-      var msg = qtd
-        ? 'Oi! Quero pedir trufas:\n' + linhas.map(function (l) { return '• ' + l; }).join('\n') + '\nTotal: ' + brl(total)
-        : 'Oi! Quero pedir trufas. Quais sabores tem hoje?';
-      enviar.href = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
-      enviarTxt.textContent = qtd ? 'Enviar pedido' : 'Pedir';
-    }
-
-    lista.addEventListener('click', function (e) {
-      var btn = e.target.closest('button[data-acao]');
-      if (!btn || btn.disabled) return;
-      var li = btn.closest('.sabor');
-      var out = li.querySelector('output');
-      var mais = btn.dataset.acao === '+';
-      out.value = Math.max(0, Math.min(99, +out.value + (mais ? 1 : -1)));
       atualizar();
-      if (animar) {
-        // a trufa pula quando entra no pedido e encolhe quando sai
-        A.animate(li.querySelector('.bola'), mais
-          ? { y: [0, -12, 0], scale: [1, 1.08, 1], duration: 520, ease: 'outQuad' }
-          : { scale: [1, .86, 1], duration: 320, ease: 'outQuad' });
-        A.animate(out, { y: [mais ? 8 : -8, 0], opacity: [0, 1], duration: 260, ease: 'outQuad' });
-      }
-    });
-
-    atualizar();
     }
 
     if (!animar) return;
 
-    /* ---------- Abertura: um único momento orquestrado ---------- */
-    var titulo = A.splitText('#titulo', { words: { wrap: 'clip' } });
-    A.utils.set('#titulo', { visibility: 'visible' });
-    A.createTimeline({ defaults: { ease: 'outExpo' } })
-      .add('.hero-moldura', { clipPath: ['inset(0 0 100% 0 round 22px)', 'inset(0 0 0% 0 round 22px)'], duration: 1100, ease: 'inOutQuart' }, 0)
-      .add('.hero-moldura img', { scale: [1.15, 1], duration: 1600 }, 0)
-      .add(titulo.words, { y: ['105%', '0%'], duration: 900, delay: A.stagger(70) }, 120)
-      .add('.intro', { opacity: [0, 1], y: [14, 0], duration: 700 }, 540)
-      .add('.hero-acoes', { opacity: [0, 1], y: [14, 0], duration: 700 }, 640)
-      // o selo cai e carimba a foto
-      .add('.selo', { opacity: [0, 1], scale: [2.4, 1], rotate: [-38, -10], duration: 480, ease: 'inQuad' }, 1000)
-      .add('.hero-moldura', { y: [0, 6, 0], duration: 280, ease: 'outQuad' }, 1480);
-
-    /* ---------- Revelações ao rolar (uma vez cada) ---------- */
-    function aoAparecer(el, fn) {
-      var io = new IntersectionObserver(function (es) {
-        if (es[0].isIntersecting) { io.disconnect(); fn(); }
-      }, { rootMargin: '0px 0px -12% 0px' });
-      io.observe(el);
-    }
-
-    // galeria: as trufas vão sendo colocadas na caixa
-    var casas = document.querySelectorAll('.casa');
-    A.utils.set(casas, { opacity: 0, scale: .82 });
-    aoAparecer(document.getElementById('caixa'), function () {
-      A.animate(casas, { opacity: 1, scale: 1, duration: 750, ease: 'outBack(1.4)', delay: A.stagger(90) });
-    });
-
-    // bilhete: cai na mesa e a fita prende
-    var bilhete = document.getElementById('bilhete');
-    A.utils.set(bilhete, { opacity: 0, y: -40, rotate: -9 });
-    A.utils.set('.fita', { scaleX: 0, rotate: 3 });
-    aoAparecer(bilhete, function () {
-      A.createTimeline()
-        .add(bilhete, { opacity: 1, y: 0, rotate: -1.5, duration: 1000, ease: 'outElastic(1, .7)' })
-        .add('.fita', { scaleX: 1, duration: 380, ease: 'outQuart' }, 420);
-    });
+    /* ---------- Movimento contínuo, leve e de fundo ---------- */
+    // a onda de chocolate do banner balança devagar
+    A.animate('.onda-frente', { x: [-30, 30], duration: 7000, ease: 'inOutSine', loop: true, alternate: true });
+    // a foto do banner "respira" (zoom lentíssimo)
+    A.animate('.banner-foto img', { scale: [1, 1.05], duration: 9000, ease: 'inOutSine', loop: true, alternate: true });
+    // as trufas do cardápio flutuam de leve, fora de sincronia
+    A.animate('.bola', { y: [-3, 3], duration: 2400, ease: 'inOutSine', loop: true, alternate: true, delay: A.stagger(260) });
+    // o botão de pedido chama atenção com um anel que respira a cada poucos segundos
+    A.animate('.pulso', { opacity: [.55, 0], scale: [1, 1.12], duration: 1400, ease: 'outQuad', loop: true, loopDelay: 2600 });
   });
   </script>
 </body>
