@@ -345,6 +345,22 @@
       .mosaico figure:not(.grande) { aspect-ratio: auto; }
       .nota-foto { text-align: right; }
     }
+
+    /* ================= Finalização do pedido ================= */
+    .pedido-dialog { width:min(520px, calc(100vw - 28px)); max-width:100%; border:1px solid var(--linha); padding:0; color:var(--texto); background:var(--branco); }
+    .pedido-dialog::backdrop { background:rgba(53,23,15,.62); }
+    .pedido-form { padding:28px; display:grid; gap:16px; }
+    .pedido-form h2 { font-size:2rem; }
+    .pedido-form p { color:var(--texto-suave); font-size:.92rem; }
+    .pedido-form label { display:grid; gap:6px; font-size:.88rem; font-weight:700; }
+    .pedido-form input { width:100%; min-height:48px; border:1px solid var(--linha); border-radius:2px; padding:0 12px; background:#fff; color:var(--texto); font:inherit; }
+    .pedido-form input:focus { outline:2px solid var(--cobre); outline-offset:2px; }
+    .pedido-form-acoes { display:flex; gap:10px; flex-wrap:wrap; }
+    .pedido-form-acoes button { flex:1; }
+    .pedido-status { min-height:1.4em; font-size:.85rem; color:var(--texto-suave); }
+    .pedido-status.erro { color:#a12d22; }
+    .pedido-status.sucesso { color:#27633b; }
+
   </style>
 </head>
 <body>
@@ -622,6 +638,26 @@
     </div>
   </dialog>
 
+
+  <!-- ================= IDENTIFICAÇÃO DO CLIENTE ================= -->
+  <dialog class="pedido-dialog" id="pedido-dialog" aria-labelledby="pedido-titulo">
+    <form class="pedido-form" id="pedido-form">
+      <h2 id="pedido-titulo">Só falta seus dados.</h2>
+      <p>Informe seu nome e WhatsApp para registrar o pedido. Depois, você poderá confirmar pelo WhatsApp.</p>
+      <label for="cliente-nome">Seu nome
+        <input id="cliente-nome" name="nome" autocomplete="name" maxlength="100" required placeholder="Como podemos te chamar?">
+      </label>
+      <label for="cliente-whatsapp">Seu WhatsApp
+        <input id="cliente-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="(11) 99999-9999">
+      </label>
+      <p class="pedido-status" id="pedido-status" role="status" aria-live="polite"></p>
+      <div class="pedido-form-acoes">
+        <button class="btn btn-linha" type="button" id="pedido-cancelar">Voltar</button>
+        <button class="btn" type="submit" id="pedido-confirmar">Registrar e continuar</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- ================= BARRA DE PEDIDO ================= -->
   <div class="barra vazia" id="barra" role="region" aria-label="Seu pedido">
     <div class="wrap">
@@ -639,6 +675,7 @@
   (function () {
     var FONE = '5511964562656';
     var CENTAVOS = 499; // preço por trufa: R$ 4,99
+    var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzrzpKqSxXniq7lfpEQOauZMxLkFWU_Gkc8VEr1eNVN-k6pmfcR17z80gMNRn9baafE/exec';
 
     /* Header: ganha fundo ao rolar */
     var topo = document.getElementById('topo');
@@ -816,6 +853,127 @@
       mudar(cardAberto, btn.dataset.acao === '+' ? 1 : -1);
       if (veioDoAdd) dAcao.querySelector('.stepper [data-acao="+"]').focus();
       else if (qtdDe(cardAberto) === 0) dAcao.querySelector('.add').focus();
+    });
+
+
+    /* Finalização: identifica o cliente, registra no Apps Script e então abre o WhatsApp. */
+    var pedidoDialog = document.getElementById('pedido-dialog');
+    var pedidoForm = document.getElementById('pedido-form');
+    var pedidoStatus = document.getElementById('pedido-status');
+    var pedidoConfirmar = document.getElementById('pedido-confirmar');
+    var nomeInput = document.getElementById('cliente-nome');
+    var whatsappInput = document.getElementById('cliente-whatsapp');
+
+    function abrirFinalizacao(e) {
+      if (e) e.preventDefault();
+      var temItem = cards.some(function (li) { return qtdDe(li) > 0; });
+      if (!temItem) {
+        document.getElementById('sabores').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      pedidoStatus.textContent = '';
+      pedidoStatus.className = 'pedido-status';
+      pedidoDialog.showModal();
+      nomeInput.focus();
+    }
+
+    enviar.addEventListener('click', abrirFinalizacao);
+    topoPedido.addEventListener('click', abrirFinalizacao);
+    document.getElementById('pedido-cancelar').addEventListener('click', function () {
+      pedidoDialog.close();
+    });
+
+    function enviarPedidoJSONP(pedido) {
+      return new Promise(function (resolve, reject) {
+        var callbackName = 'doceAfetoCallback_' + Date.now();
+        var script = document.createElement('script');
+        var encerrado = false;
+        var timeout = setTimeout(function () {
+          finalizar();
+          reject(new Error('O registro demorou mais que o esperado. Tente novamente.'));
+        }, 15000);
+
+        function finalizar() {
+          if (encerrado) return;
+          encerrado = true;
+          clearTimeout(timeout);
+          script.remove();
+          try { delete window[callbackName]; } catch (_) { window[callbackName] = undefined; }
+        }
+
+        window[callbackName] = function (resposta) {
+          finalizar();
+          if (resposta && resposta.sucesso) resolve(resposta);
+          else reject(new Error((resposta && resposta.mensagem) || 'Não foi possível registrar o pedido.'));
+        };
+
+        script.onerror = function () {
+          finalizar();
+          reject(new Error('Não foi possível acessar o sistema de pedidos.'));
+        };
+
+        var url = GOOGLE_SCRIPT_URL +
+          '?callback=' + encodeURIComponent(callbackName) +
+          '&pedido=' + encodeURIComponent(JSON.stringify(pedido));
+        script.src = url;
+        document.head.appendChild(script);
+      });
+    }
+
+    pedidoForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var nome = nomeInput.value.trim();
+      var whatsapp = whatsappInput.value.replace(/\D/g, '');
+      if (!nome || whatsapp.length < 10 || whatsapp.length > 13) {
+        pedidoStatus.textContent = 'Confira seu nome e informe um WhatsApp válido com DDD.';
+        pedidoStatus.className = 'pedido-status erro';
+        return;
+      }
+
+      var itensPedido = cards.map(function (li) {
+        return { sabor: li.dataset.sabor, quantidade: qtdDe(li) };
+      }).filter(function (item) { return item.quantidade > 0; });
+
+      if (!itensPedido.length) {
+        pedidoStatus.textContent = 'Seu pedido está vazio.';
+        pedidoStatus.className = 'pedido-status erro';
+        return;
+      }
+
+      var quantidade = itensPedido.reduce(function (soma, item) { return soma + item.quantidade; }, 0);
+      var total = quantidade * CENTAVOS;
+      var pedido = { nome: nome, whatsapp: whatsapp, itens: itensPedido };
+
+      pedidoConfirmar.disabled = true;
+      pedidoConfirmar.textContent = 'Registrando...';
+      pedidoStatus.textContent = 'Registrando seu pedido com segurança...';
+      pedidoStatus.className = 'pedido-status';
+
+      try {
+        var resposta = await enviarPedidoJSONP(pedido);
+        var linhas = itensPedido.map(function (item) {
+          return '• ' + item.quantidade + 'x ' + item.sabor;
+        });
+        var msg = 'Olá! Acabei de registrar um pedido na Doce Afeto.\n' +
+          'Código: ' + resposta.codigo + '\n' +
+          'Nome: ' + nome + '\n' +
+          'WhatsApp: ' + whatsapp + '\n\n' +
+          linhas.join('\n') + '\n\n' +
+          'Quantidade: ' + quantidade + '\n' +
+          'Total: ' + brl(total) + '\n\n' +
+          'Gostaria de confirmar a disponibilidade e combinar a retirada/entrega.';
+        var url = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
+        pedidoStatus.textContent = 'Pedido registrado! Abrindo o WhatsApp...';
+        pedidoStatus.className = 'pedido-status sucesso';
+        window.location.href = url;
+        pedidoDialog.close();
+      } catch (erro) {
+        pedidoStatus.textContent = erro.message || 'Erro ao registrar. Tente novamente.';
+        pedidoStatus.className = 'pedido-status erro';
+      } finally {
+        pedidoConfirmar.disabled = false;
+        pedidoConfirmar.textContent = 'Registrar e continuar';
+      }
     });
 
     atualizar();
