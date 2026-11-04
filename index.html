@@ -35,7 +35,7 @@
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "Trufa artesanal Doce Afeto",
-    "description": "Trufa de chocolate artesanal. Sabores: Tradicional, Brigadeiro, Ninho com Nutella, Maracujá, Morango e Coco.",
+    "description": "Trufa de chocolate artesanal. Sabores: Tradicional, Meio amargo, Brigadeiro, Maracujá, Limão, Cereja e Prestígio.",
     "image": ["https://doce-afeto-liard.vercel.app/img/og-trufas.jpg"],
     "brand": { "@type": "Brand", "name": "Doce Afeto" },
     "offers": {
@@ -176,15 +176,14 @@
     }
     .sabor.ativo { border-color: var(--cobre); box-shadow: inset 0 0 0 1px var(--cobre); }
 
-    /* Área da foto. Enquanto não houver foto real do sabor, aparece um rótulo tipográfico. */
-    .sabor-foto { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--rotulo); container-type: inline-size; }
-    .sabor-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .rotulo {
-      position: absolute; inset: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-      border: 1px solid var(--caramelo); text-align: center; padding: 12px;
-    }
-    .rotulo strong { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; font-size: clamp(1.1rem, 12cqw, 2.2rem); font-style: italic; line-height: 1.05; color: var(--marrom); }
-    .rotulo::after { content: ""; width: 28px; height: 1px; background: var(--caramelo); margin-top: 4px; }
+    /* Mini slider do card: trufa e trufa na mão (arrasta no celular, troca ao passar o mouse no desktop) */
+    .sabor-galeria { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--rotulo); cursor: zoom-in; }
+    .slides { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; }
+    .slides::-webkit-scrollbar { display: none; }
+    .slides img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; user-select: none; -webkit-user-drag: none; }
+    .pontos { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 6px; }
+    .pontos i { width: 6px; height: 6px; border-radius: 50%; background: rgba(53,23,15,.25); transition: background-color .2s; }
+    .pontos i.on { background: var(--chocolate); }
     .no-pedido {
       position: absolute; top: 10px; left: 10px; z-index: 1; display: none;
       padding: 5px 9px; background: var(--chocolate); color: var(--creme);
@@ -194,9 +193,15 @@
 
     .sabor-corpo { display: flex; flex-direction: column; flex: 1; padding: 14px 12px 12px; }
     .sabor h3 { font-size: 1.3rem; line-height: 1.1; }
+    .abrir {
+      padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+      text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1px;
+      transition: text-decoration-color .2s;
+    }
+    .abrir:hover { text-decoration-color: var(--caramelo); }
     .sabor-desc { margin-top: 6px; font-size: .85rem; line-height: 1.45; color: var(--texto-suave); }
     .sabor-acao { display: grid; gap: 10px; margin-top: auto; padding-top: 14px; }
-    .sabor .preco { font-weight: 700; font-size: .95rem; }
+    .preco { font-weight: 700; font-size: .95rem; }
     .add, .stepper { height: 44px; border-radius: var(--raio); }
     .add {
       width: 100%; border: 1px solid var(--chocolate); background: transparent; color: var(--chocolate);
@@ -204,14 +209,54 @@
     }
     .add:hover { background: var(--chocolate); color: var(--creme); }
     .stepper { display: none; align-items: center; justify-content: space-between; background: var(--chocolate); color: var(--creme); }
-    .sabor.ativo .add { display: none; }
-    .sabor.ativo .stepper { display: flex; }
+    .ativo .add { display: none; }
+    .ativo .stepper { display: flex; }
     .stepper button {
       width: 44px; height: 44px; border: 0; background: transparent; color: var(--caramelo);
       font-size: 1.3rem; font-weight: 600; line-height: 1; cursor: pointer; touch-action: manipulation;
     }
     .stepper button:hover { color: #fff; }
     .stepper output { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ================= Detalhe do sabor (dialog) ================= */
+    .detalhe {
+      width: 100%; max-width: 100%; max-height: 100%; height: 100%; margin: 0; padding: 0; border: 0;
+      background: var(--branco); color: var(--texto);
+    }
+    .detalhe::backdrop { background: rgba(53,23,15,.55); }
+    .detalhe[open] { animation: subir .28s ease-out; }
+    @keyframes subir { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .detalhe-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100%; }
+    .detalhe-galeria { position: relative; min-width: 0; aspect-ratio: 1; overflow: hidden; background: var(--rotulo); }
+    .detalhe-galeria .slides { height: 100%; }
+    .detalhe-galeria .slides:focus-visible { outline-offset: -4px; }
+    .seta {
+      position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; border-radius: 50%;
+      background: rgba(255,252,248,.9); color: var(--chocolate); font-size: 1.7rem; line-height: 1; cursor: pointer; display: grid; place-items: center;
+    }
+    .seta:disabled { opacity: 0; pointer-events: none; }
+    .seta-ant { left: 12px; } .seta-prox { right: 12px; }
+    .detalhe-pontos { position: absolute; left: 50%; bottom: 44px; transform: translateX(-50%); display: flex; gap: 4px; }
+    .detalhe-pontos button { width: 28px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+    .detalhe-pontos button::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: rgba(53,23,15,.28); }
+    .detalhe-pontos button[aria-current="true"]::before { background: var(--chocolate); }
+    .detalhe-legenda { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-size: .8rem; font-weight: 600; color: var(--chocolate); }
+    .detalhe-info { padding: 26px var(--gutter) 32px; }
+    .detalhe-info h2 { font-size: clamp(2rem, 8vw, 2.8rem); }
+    .detalhe-preco { margin-top: 8px; font-weight: 700; font-size: 1.15rem; }
+    .detalhe-preco span { font-weight: 400; font-size: .9rem; color: var(--texto-suave); }
+    .detalhe-desc { margin-top: 16px; color: var(--texto-suave); max-width: 40ch; }
+    .detalhe-papel { margin-top: 10px; font-size: .9rem; color: var(--texto-suave); }
+    .detalhe-acao { margin-top: 24px; max-width: 320px; }
+    .detalhe-acao .add { background: var(--cobre); border-color: var(--cobre); color: #fff; height: 50px; font-size: .95rem; }
+    .detalhe-acao .add:hover { background: var(--cobre-escuro); border-color: var(--cobre-escuro); }
+    .detalhe-acao .stepper { height: 50px; }
+    .detalhe-nota { margin-top: 20px; font-size: .75rem; color: var(--texto-suave); }
+    .fechar {
+      position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: 0; border-radius: 50%;
+      background: rgba(255,252,248,.92); color: var(--chocolate); font-size: 1.8rem; line-height: 1; cursor: pointer;
+    }
+    body.modal-aberto { overflow: hidden; }
 
     /* ================= Galeria ================= */
     .mosaico { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -258,9 +303,10 @@
 
     /* ================= Tablet ================= */
     @media (min-width: 640px) {
+      .detalhe-info { padding: 32px var(--gutter) 40px; }
       :root { --gutter: 32px; }
       .hero-texto { padding: 48px var(--gutter) 72px; }
-      .sabores { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+      .sabores { gap: 16px; }
       .sabor-corpo { padding: 18px 16px 16px; }
       .secao { padding: 88px 0; }
       .passos { grid-template-columns: repeat(3, 1fr); gap: 28px; }
@@ -286,12 +332,13 @@
       .secao-cabeca { grid-template-columns: 1fr auto; align-items: end; gap: 32px; margin-bottom: 44px; }
       .secao-cabeca p { text-align: right; max-width: 32ch; }
 
-      .sabores { gap: 24px; }
-      .sabor-corpo { padding: 20px 20px 18px; }
-      .sabor h3 { font-size: 1.55rem; }
-      .sabor-desc { font-size: .92rem; }
-      .sabor-acao { grid-template-columns: 1fr auto; align-items: center; }
-      .add, .stepper { width: 150px; }
+      .sabores { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+      .sabor-corpo { padding: 18px 18px 16px; }
+      .sabor h3 { font-size: 1.45rem; }
+
+      .detalhe { width: min(940px, calc(100vw - 64px)); height: fit-content; max-height: calc(100vh - 64px); margin: auto; }
+      .detalhe-in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); min-height: 0; }
+      .detalhe-info { align-self: center; padding: 48px 44px; }
 
       .mosaico { grid-template-columns: 7fr 5fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 16px; }
       .mosaico .grande { grid-column: 1; grid-row: span 2; }
@@ -346,17 +393,20 @@
           <p>Todos a R$ 4,99. Adicione quantos quiser e finalize pelo WhatsApp.</p>
         </div>
 
-        <!-- Fotos dos sabores em img/sabores/ (1:1). Para trocar, substitua os arquivos -480 e -800.webp mantendo os nomes. -->
+        <!-- Fotos em img/sabores/: {sabor}-480/800/1200.webp (trufa) e {sabor}-mao-480/800/1200.webp (na mão). Toque no nome ou na foto abre os detalhes. -->
         <ul class="sabores" id="lista-sabores">
-          <li class="sabor" data-sabor="Tradicional">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Tradicional</strong></span>
-              <img src="img/sabores/tradicional-480.webp" srcset="img/sabores/tradicional-480.webp 480w, img/sabores/tradicional-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa Tradicional inteira e cortada, com recheio de ganache de chocolate" width="800" height="800" loading="lazy" decoding="async">
+          <li class="sabor" data-sabor="Tradicional" data-slug="tradicional" data-papel="azul">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/tradicional-480.webp" srcset="img/sabores/tradicional-480.webp 480w, img/sabores/tradicional-800.webp 800w, img/sabores/tradicional-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Tradicional: uma embrulhada em papel azul e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/tradicional-mao-480.webp" srcset="img/sabores/tradicional-mao-480.webp 480w, img/sabores/tradicional-mao-800.webp 800w, img/sabores/tradicional-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Tradicional na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
-              <h3>Tradicional</h3>
-              <p class="sabor-desc">Ganache de chocolate meio amargo.</p>
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Tradicional</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de chocolate.</p>
               <div class="sabor-acao">
                 <p class="preco">R$ 4,99</p>
                 <button type="button" class="add" data-acao="+" aria-label="Adicionar Tradicional ao pedido">Adicionar</button>
@@ -364,15 +414,37 @@
               </div>
             </div>
           </li>
-          <li class="sabor" data-sabor="Brigadeiro">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Brigadeiro</strong></span>
-              <img src="img/sabores/brigadeiro-480.webp" srcset="img/sabores/brigadeiro-480.webp 480w, img/sabores/brigadeiro-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Brigadeiro com granulado, inteira e cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async">
+          <li class="sabor" data-sabor="Meio amargo" data-slug="meio-amargo" data-papel="marrom">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/meio-amargo-480.webp" srcset="img/sabores/meio-amargo-480.webp 480w, img/sabores/meio-amargo-800.webp 800w, img/sabores/meio-amargo-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Meio amargo: uma embrulhada em papel marrom e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/meio-amargo-mao-480.webp" srcset="img/sabores/meio-amargo-mao-480.webp 480w, img/sabores/meio-amargo-mao-800.webp 800w, img/sabores/meio-amargo-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Meio amargo na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
-              <h3>Brigadeiro</h3>
-              <p class="sabor-desc">Recheio de brigadeiro de colher.</p>
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Meio amargo</button></h3>
+              <p class="sabor-desc">Casca e recheio de chocolate meio amargo.</p>
+              <div class="sabor-acao">
+                <p class="preco">R$ 4,99</p>
+                <button type="button" class="add" data-acao="+" aria-label="Adicionar Meio amargo ao pedido">Adicionar</button>
+                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Meio amargo">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Meio amargo">+</button></div>
+              </div>
+            </div>
+          </li>
+          <li class="sabor" data-sabor="Brigadeiro" data-slug="brigadeiro" data-papel="roxo">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/brigadeiro-480.webp" srcset="img/sabores/brigadeiro-480.webp 480w, img/sabores/brigadeiro-800.webp 800w, img/sabores/brigadeiro-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Brigadeiro: uma embrulhada em papel roxo e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/brigadeiro-mao-480.webp" srcset="img/sabores/brigadeiro-mao-480.webp 480w, img/sabores/brigadeiro-mao-800.webp 800w, img/sabores/brigadeiro-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Brigadeiro na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
+              <span class="no-pedido" aria-hidden="true"></span>
+            </div>
+            <div class="sabor-corpo">
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Brigadeiro</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de brigadeiro.</p>
               <div class="sabor-acao">
                 <p class="preco">R$ 4,99</p>
                 <button type="button" class="add" data-acao="+" aria-label="Adicionar Brigadeiro ao pedido">Adicionar</button>
@@ -380,31 +452,18 @@
               </div>
             </div>
           </li>
-          <li class="sabor" data-sabor="Ninho com Nutella">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Ninho com Nutella</strong></span>
-              <img src="img/sabores/ninho-com-nutella-480.webp" srcset="img/sabores/ninho-com-nutella-480.webp 480w, img/sabores/ninho-com-nutella-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Ninho com Nutella, casca branca e centro de creme de avelã" width="800" height="800" loading="lazy" decoding="async">
-              <span class="no-pedido" aria-hidden="true"></span>
-            </div>
-            <div class="sabor-corpo">
-              <h3>Ninho com Nutella</h3>
-              <p class="sabor-desc">Creme de Ninho com centro de Nutella.</p>
-              <div class="sabor-acao">
-                <p class="preco">R$ 4,99</p>
-                <button type="button" class="add" data-acao="+" aria-label="Adicionar Ninho com Nutella ao pedido">Adicionar</button>
-                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Ninho com Nutella">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Ninho com Nutella">+</button></div>
+          <li class="sabor" data-sabor="Maracujá" data-slug="maracuja" data-papel="dourado">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/maracuja-480.webp" srcset="img/sabores/maracuja-480.webp 480w, img/sabores/maracuja-800.webp 800w, img/sabores/maracuja-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Maracujá: uma embrulhada em papel dourado e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/maracuja-mao-480.webp" srcset="img/sabores/maracuja-mao-480.webp 480w, img/sabores/maracuja-mao-800.webp 800w, img/sabores/maracuja-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Maracujá na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
               </div>
-            </div>
-          </li>
-          <li class="sabor" data-sabor="Maracujá">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Maracujá</strong></span>
-              <img src="img/sabores/maracuja-480.webp" srcset="img/sabores/maracuja-480.webp 480w, img/sabores/maracuja-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Maracujá cortada, com recheio amarelo cremoso" width="800" height="800" loading="lazy" decoding="async">
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
-              <h3>Maracujá</h3>
-              <p class="sabor-desc">Ganache azedinha de maracujá.</p>
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Maracujá</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de maracujá.</p>
               <div class="sabor-acao">
                 <p class="preco">R$ 4,99</p>
                 <button type="button" class="add" data-acao="+" aria-label="Adicionar Maracujá ao pedido">Adicionar</button>
@@ -412,35 +471,60 @@
               </div>
             </div>
           </li>
-          <li class="sabor" data-sabor="Morango">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Morango</strong></span>
-              <img src="img/sabores/morango-480.webp" srcset="img/sabores/morango-480.webp 480w, img/sabores/morango-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Morango cortada, com recheio rosado cremoso" width="800" height="800" loading="lazy" decoding="async">
+          <li class="sabor" data-sabor="Limão" data-slug="limao" data-papel="verde">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/limao-480.webp" srcset="img/sabores/limao-480.webp 480w, img/sabores/limao-800.webp 800w, img/sabores/limao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Limão: uma embrulhada em papel verde e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/limao-mao-480.webp" srcset="img/sabores/limao-mao-480.webp 480w, img/sabores/limao-mao-800.webp 800w, img/sabores/limao-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Limão na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
-              <h3>Morango</h3>
-              <p class="sabor-desc">Recheio cremoso de morango.</p>
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Limão</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de limão.</p>
               <div class="sabor-acao">
                 <p class="preco">R$ 4,99</p>
-                <button type="button" class="add" data-acao="+" aria-label="Adicionar Morango ao pedido">Adicionar</button>
-                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Morango">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Morango">+</button></div>
+                <button type="button" class="add" data-acao="+" aria-label="Adicionar Limão ao pedido">Adicionar</button>
+                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Limão">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Limão">+</button></div>
               </div>
             </div>
           </li>
-          <li class="sabor" data-sabor="Coco">
-            <div class="sabor-foto">
-              <span class="rotulo" aria-hidden="true"><strong>Coco</strong></span>
-              <img src="img/sabores/coco-480.webp" srcset="img/sabores/coco-480.webp 480w, img/sabores/coco-800.webp 800w" sizes="(min-width: 1200px) 370px, (min-width: 640px) 31vw, 50vw" alt="Trufa de Coco coberta com coco ralado, inteira e cortada" width="800" height="800" loading="lazy" decoding="async">
+          <li class="sabor" data-sabor="Cereja" data-slug="cereja" data-papel="vermelho">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/cereja-480.webp" srcset="img/sabores/cereja-480.webp 480w, img/sabores/cereja-800.webp 800w, img/sabores/cereja-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Cereja: uma embrulhada em papel vermelho e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/cereja-mao-480.webp" srcset="img/sabores/cereja-mao-480.webp 480w, img/sabores/cereja-mao-800.webp 800w, img/sabores/cereja-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Cereja na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
               <span class="no-pedido" aria-hidden="true"></span>
             </div>
             <div class="sabor-corpo">
-              <h3>Coco</h3>
-              <p class="sabor-desc">Beijinho cremoso com coco ralado.</p>
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Cereja</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de cereja.</p>
               <div class="sabor-acao">
                 <p class="preco">R$ 4,99</p>
-                <button type="button" class="add" data-acao="+" aria-label="Adicionar Coco ao pedido">Adicionar</button>
-                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Coco">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Coco">+</button></div>
+                <button type="button" class="add" data-acao="+" aria-label="Adicionar Cereja ao pedido">Adicionar</button>
+                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Cereja">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Cereja">+</button></div>
+              </div>
+            </div>
+          </li>
+          <li class="sabor" data-sabor="Prestígio" data-slug="prestigio" data-papel="prateado">
+            <div class="sabor-galeria">
+              <div class="slides">
+                <img src="img/sabores/prestigio-480.webp" srcset="img/sabores/prestigio-480.webp 480w, img/sabores/prestigio-800.webp 800w, img/sabores/prestigio-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Prestígio: uma embrulhada em papel prateado e outra cortada mostrando o recheio" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+                <img src="img/sabores/prestigio-mao-480.webp" srcset="img/sabores/prestigio-mao-480.webp 480w, img/sabores/prestigio-mao-800.webp 800w, img/sabores/prestigio-mao-1200.webp 1200w" sizes="(min-width: 1200px) 270px, (min-width: 900px) 23vw, 50vw" alt="Trufa sabor Prestígio na palma da mão, para referência de tamanho" width="800" height="800" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <span class="pontos" aria-hidden="true"><i></i><i></i></span>
+              <span class="no-pedido" aria-hidden="true"></span>
+            </div>
+            <div class="sabor-corpo">
+              <h3><button type="button" class="abrir" aria-haspopup="dialog">Prestígio</button></h3>
+              <p class="sabor-desc">Casca de chocolate ao leite com recheio cremoso de coco.</p>
+              <div class="sabor-acao">
+                <p class="preco">R$ 4,99</p>
+                <button type="button" class="add" data-acao="+" aria-label="Adicionar Prestígio ao pedido">Adicionar</button>
+                <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma Prestígio">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma Prestígio">+</button></div>
               </div>
             </div>
           </li>
@@ -509,6 +593,35 @@
     </div>
   </footer>
 
+
+  <!-- ================= DETALHE DO SABOR ================= -->
+  <dialog class="detalhe" id="detalhe" aria-labelledby="detalhe-nome">
+    <div class="detalhe-in">
+      <div class="detalhe-galeria">
+        <div class="slides" id="detalhe-slides" tabindex="0" aria-label="Fotos do sabor. Use as setas para trocar."></div>
+        <button type="button" class="seta seta-ant" data-ir="-1" aria-label="Foto anterior">&#8249;</button>
+        <button type="button" class="seta seta-prox" data-ir="1" aria-label="Próxima foto">&#8250;</button>
+        <div class="detalhe-pontos" role="group" aria-label="Escolher foto">
+          <button type="button" data-foto="0" aria-label="Foto da trufa" aria-current="true"></button>
+          <button type="button" data-foto="1" aria-label="Foto na mão"></button>
+        </div>
+        <p class="detalhe-legenda" id="detalhe-legenda" aria-live="polite">A trufa por dentro</p>
+      </div>
+      <div class="detalhe-info">
+        <h2 id="detalhe-nome"></h2>
+        <p class="detalhe-preco">R$ 4,99 <span>por unidade</span></p>
+        <p class="detalhe-desc" id="detalhe-desc"></p>
+        <p class="detalhe-papel" id="detalhe-papel"></p>
+        <div class="detalhe-acao" id="detalhe-acao">
+          <button type="button" class="add" data-acao="+">Adicionar ao pedido</button>
+          <div class="stepper"><button type="button" data-acao="-" aria-label="Remover uma">−</button><output aria-live="polite">0</output><button type="button" data-acao="+" aria-label="Adicionar mais uma">+</button></div>
+        </div>
+        <p class="detalhe-nota">Imagens ilustrativas.</p>
+      </div>
+      <button type="button" class="fechar" id="detalhe-fechar" aria-label="Fechar detalhes">&times;</button>
+    </div>
+  </dialog>
+
   <!-- ================= BARRA DE PEDIDO ================= -->
   <div class="barra vazia" id="barra" role="region" aria-label="Seu pedido">
     <div class="wrap">
@@ -533,10 +646,9 @@
     marcarTopo();
     window.addEventListener('scroll', marcarTopo, { passive: true });
 
-    /* Pedido */
     var lista = document.getElementById('lista-sabores');
     if (!lista) return;
-    var cards = lista.querySelectorAll('.sabor');
+    var cards = Array.prototype.slice.call(lista.querySelectorAll('.sabor'));
     var barra = document.getElementById('barra');
     var totalEl = document.getElementById('total');
     var qtdEl = document.getElementById('qtd');
@@ -547,14 +659,35 @@
     var brl = function (c) { return (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
     var waIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3 1 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>';
 
+    /* ---------- Detalhe (dialog) ---------- */
+    var dlg = document.getElementById('detalhe');
+    var dSlides = document.getElementById('detalhe-slides');
+    var dNome = document.getElementById('detalhe-nome');
+    var dDesc = document.getElementById('detalhe-desc');
+    var dPapel = document.getElementById('detalhe-papel');
+    var dAcao = document.getElementById('detalhe-acao');
+    var dLegenda = document.getElementById('detalhe-legenda');
+    var dPontos = dlg.querySelectorAll('.detalhe-pontos button');
+    var dSetas = dlg.querySelectorAll('.seta');
+    var legendas = ['A trufa por dentro', 'Referência de tamanho'];
+    var cardAberto = null;
+    var origemFoco = null;
+
+    function qtdDe(li) { return +li.querySelector('output').value; }
+
     function atualizar() {
       var linhas = [], qtd = 0;
       cards.forEach(function (li) {
-        var q = +li.querySelector('output').value;
+        var q = qtdDe(li);
         li.classList.toggle('ativo', q > 0);
         li.querySelector('.no-pedido').textContent = q > 0 ? q + ' no pedido' : '';
         if (q > 0) { linhas.push(q + 'x ' + li.dataset.sabor); qtd += q; }
       });
+      if (cardAberto) {
+        var qa = qtdDe(cardAberto);
+        dAcao.classList.toggle('ativo', qa > 0);
+        dAcao.querySelector('output').value = qa;
+      }
       var total = qtd * CENTAVOS;
       barra.classList.toggle('vazia', qtd === 0);
 
@@ -564,7 +697,7 @@
         enviar.href = '#sabores';
         enviar.removeAttribute('target');
         enviarTxt.textContent = 'Escolher sabores';
-        enviar.querySelector('svg') && enviar.querySelector('svg').remove();
+        var ic = enviar.querySelector('svg'); if (ic) ic.remove();
         topoPedido.href = '#sabores';
         topoPedido.removeAttribute('target');
         topoPedido.textContent = 'Fazer pedido';
@@ -581,28 +714,108 @@
       var url = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
 
       enviar.className = 'btn';
-      enviar.href = url;
-      enviar.target = '_blank';
-      enviar.rel = 'noopener';
+      enviar.href = url; enviar.target = '_blank'; enviar.rel = 'noopener';
       enviarTxt.innerHTML = 'Finalizar<span class="so-largo"> pedido</span>';
       if (!enviar.querySelector('svg')) enviar.insertAdjacentHTML('afterbegin', waIcon);
-      topoPedido.href = url;
-      topoPedido.target = '_blank';
-      topoPedido.rel = 'noopener';
+      topoPedido.href = url; topoPedido.target = '_blank'; topoPedido.rel = 'noopener';
       topoPedido.textContent = 'Finalizar (' + qtd + ')';
     }
 
-    lista.addEventListener('click', function (e) {
-      var btn = e.target.closest('button[data-acao]');
-      if (!btn) return;
-      var li = btn.closest('.sabor');
+    function mudar(li, delta) {
       var out = li.querySelector('output');
-      var veioDoAdd = btn.classList.contains('add');
-      out.value = Math.max(0, Math.min(99, +out.value + (btn.dataset.acao === '+' ? 1 : -1)));
+      out.value = Math.max(0, Math.min(99, +out.value + delta));
       atualizar();
-      // o botão clicado pode sumir: mantém o foco do teclado num controle visível
-      if (veioDoAdd) li.querySelector('.stepper [data-acao="+"]').focus();
-      else if (+out.value === 0) li.querySelector('.add').focus();
+    }
+
+    /* Cliques nos cards: quantidade ou abrir detalhe */
+    lista.addEventListener('click', function (e) {
+      var li = e.target.closest('.sabor');
+      if (!li) return;
+      var btn = e.target.closest('button[data-acao]');
+      if (btn) {
+        var veioDoAdd = btn.classList.contains('add');
+        mudar(li, btn.dataset.acao === '+' ? 1 : -1);
+        if (veioDoAdd) li.querySelector('.stepper [data-acao="+"]').focus();
+        else if (qtdDe(li) === 0) li.querySelector('.add').focus();
+        return;
+      }
+      if (e.target.closest('.abrir') || e.target.closest('.sabor-galeria')) abrir(li, e.target.closest('.abrir') || li.querySelector('.abrir'));
+    });
+
+    /* Mini slider dos cards: pontos acompanham o arraste; no desktop o mouse mostra a foto na mão */
+    var temHover = window.matchMedia('(hover: hover)').matches;
+    cards.forEach(function (li) {
+      var sl = li.querySelector('.slides');
+      var pts = li.querySelectorAll('.pontos i');
+      var marcar = function () {
+        var i = Math.round(sl.scrollLeft / sl.clientWidth);
+        pts.forEach(function (p, k) { p.classList.toggle('on', k === i); });
+      };
+      sl.addEventListener('scroll', marcar, { passive: true });
+      marcar();
+      if (temHover) {
+        var gal = li.querySelector('.sabor-galeria');
+        gal.addEventListener('mouseenter', function () { sl.scrollTo({ left: sl.clientWidth }); });
+        gal.addEventListener('mouseleave', function () { sl.scrollTo({ left: 0 }); });
+      }
+    });
+
+    /* Slider do detalhe */
+    function fotoAtual() { return Math.round(dSlides.scrollLeft / Math.max(1, dSlides.clientWidth)); }
+    function irPara(i) { dSlides.scrollTo({ left: i * dSlides.clientWidth }); }
+    function marcarDetalhe() {
+      var i = fotoAtual();
+      dPontos.forEach(function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      dSetas[0].disabled = i === 0;
+      dSetas[1].disabled = i === dPontos.length - 1;
+      dLegenda.textContent = legendas[i] || '';
+    }
+    dSlides.addEventListener('scroll', marcarDetalhe, { passive: true });
+    dPontos.forEach(function (b) { b.addEventListener('click', function () { irPara(+b.dataset.foto); }); });
+    dSetas.forEach(function (b) { b.addEventListener('click', function () { irPara(fotoAtual() + +b.dataset.ir); }); });
+    dSlides.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); irPara(fotoAtual() + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(fotoAtual() - 1); }
+    });
+
+    function abrir(li, origem) {
+      cardAberto = li;
+      origemFoco = origem || null;
+      var nome = li.dataset.sabor;
+      dNome.textContent = nome;
+      dDesc.textContent = li.querySelector('.sabor-desc').textContent;
+      dPapel.textContent = 'Vem embrulhada individualmente em papel metalizado ' + li.dataset.papel + '.';
+      dAcao.querySelector('.add').setAttribute('aria-label', 'Adicionar ' + nome + ' ao pedido');
+      dAcao.querySelector('[data-acao="-"]').setAttribute('aria-label', 'Remover uma ' + nome);
+      dAcao.querySelector('.stepper [data-acao="+"]').setAttribute('aria-label', 'Adicionar mais uma ' + nome);
+      dSlides.innerHTML = '';
+      li.querySelectorAll('.slides img').forEach(function (img) {
+        var c = img.cloneNode();
+        c.removeAttribute('loading');
+        c.sizes = '(min-width: 960px) 480px, 100vw';
+        dSlides.appendChild(c);
+      });
+      atualizar();
+      document.body.classList.add('modal-aberto');
+      dlg.showModal();
+      dSlides.scrollLeft = 0;
+      marcarDetalhe();
+    }
+    function fechar() { dlg.close(); }
+    dlg.addEventListener('close', function () {
+      document.body.classList.remove('modal-aberto');
+      cardAberto = null;
+      if (origemFoco) origemFoco.focus();
+    });
+    document.getElementById('detalhe-fechar').addEventListener('click', fechar);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) fechar(); });
+    dAcao.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-acao]');
+      if (!btn || !cardAberto) return;
+      var veioDoAdd = btn.classList.contains('add');
+      mudar(cardAberto, btn.dataset.acao === '+' ? 1 : -1);
+      if (veioDoAdd) dAcao.querySelector('.stepper [data-acao="+"]').focus();
+      else if (qtdDe(cardAberto) === 0) dAcao.querySelector('.add').focus();
     });
 
     atualizar();
