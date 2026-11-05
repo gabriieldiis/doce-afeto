@@ -22,8 +22,7 @@ export default async function handler(req, res) {
             `${supabaseUrl}/rest/v1/produtos?select=id&limit=1`,
             {
                 headers: {
-                    apikey: supabaseKey,
-                    Authorization: `Bearer ${supabaseKey}`
+                    apikey: supabaseKey
                 }
             }
         );
@@ -34,13 +33,14 @@ export default async function handler(req, res) {
             console.error("Erro Supabase:", {
                 status: response.status,
                 resposta: erro
-            });
+            }); 
 
-            return res.status(502).json({
-                sucesso: false,
-                mensagem: "O Supabase recusou a solicitação.",
-                codigo: response.status
-            });
+                return res.status(502).json({
+                    sucesso: false,
+                    mensagem: "O Supabase recusou a solicitação.",
+                    codigo: response.status,
+                    detalhe: erro
+                });
         }
 
         return res.status(200).json({
