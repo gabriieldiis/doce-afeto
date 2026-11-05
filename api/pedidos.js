@@ -29,7 +29,18 @@ export default async function handler(req, res) {
         );
 
         if (!response.ok) {
-            throw new Error("Falha na comunicação com o Supabase.");
+            const erro = await response.text();
+
+            console.error("Erro Supabase:", {
+                status: response.status,
+                resposta: erro
+            });
+
+            return res.status(502).json({
+                sucesso: false,
+                mensagem: "O Supabase recusou a solicitação.",
+                codigo: response.status
+            });
         }
 
         return res.status(200).json({
