@@ -23,9 +23,11 @@ async function verificarAdministrador(req) {
         }
     );
 
-    if (!authResponse.ok) {
-        return null;
-    }
+if (!authResponse.ok) {
+    console.error("Falha na autenticação:", authResponse.status);
+    console.error("Resposta Auth:", await authResponse.text());
+    return null;
+}
 
     const usuario = await authResponse.json();
 
@@ -43,15 +45,18 @@ async function verificarAdministrador(req) {
         }
     );
 
-    if (!adminResponse.ok) {
-        return null;
-    }
+if (!adminResponse.ok) {
+    console.error("Falha na consulta de administradores:", adminResponse.status);
+    console.error("Resposta Admin:", await adminResponse.text());
+    return null;
+}
 
     const administradores = await adminResponse.json();
 
-    if (!administradores.length) {
-        return null;
-    }
+if (!administradores.length) {
+    console.error("Usuário autenticado, mas não encontrado na tabela administradores:", usuario.id);
+    return null;
+}
 
     return usuario;
 }
