@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração | Doce Afeto</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <main class="admin-container">
+
+        <section id="tela-login">
+            <h1>Doce Afeto</h1>
+            <p>Painel administrativo</p>
+
+            <form id="form-login">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" required>
+
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" required>
+
+                <button type="submit">Entrar</button>
+                <p id="mensagem-login"></p>
+            </form>
+        </section>
+
+        <section id="painel-admin" hidden>
+            <header>
+                <h1>Pedidos</h1>
+                <button id="btn-sair" type="button">Sair</button>
+            </header>
+
+            <div id="lista-pedidos"></div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/admin.js"></script>
+
+</body>
+</html>
