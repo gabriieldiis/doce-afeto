@@ -1,6 +1,5 @@
-
 export default async function handler(req, res) {
-    if (req.method !== "GET") {
+    if (req.method !== "POST") {
         return res.status(405).json({
             sucesso: false,
             mensagem: "Método não permitido."
@@ -18,42 +17,56 @@ export default async function handler(req, res) {
     }
 
     try {
+        const { nome, whatsapp, itens } = req.body || {};
+
+        if (
+            typeof nome !== "string" ||
+            !nome.trim() ||
+            typeof whatsapp !== "string" ||
+            !Array.isArray(itens) ||
+            itens.length === 0
+        ) {
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: "Dados do pedido inválidos."
+            });
+        }
+
         const response = await fetch(
-            `${supabaseUrl}/rest/v1/produtos?select=id&limit=1`,
+            `${supabaseUrl}/rest/v1/rpc/registrar_pedido`,
             {
+                method: "POST",
                 headers: {
-                    apikey: supabaseKey
-                }
+                    apikey: supabaseKey,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    p_nome: nome.trim(),
+                    p_telefone: whatsapp,
+                    p_itens: itens
+                })
             }
         );
 
+        const resultado = await response.json();
+
         if (!response.ok) {
-            const erro = await response.text();
+            console.error("Erro Supabase:", resultado);
 
-            console.error("Erro Supabase:", {
-                status: response.status,
-                resposta: erro
-            }); 
-
-                return res.status(502).json({
-                    sucesso: false,
-                    mensagem: "O Supabase recusou a solicitação.",
-                    codigo: response.status,
-                    detalhe: erro
-                });
+            return res.status(502).json({
+                sucesso: false,
+                mensagem: "Não foi possível registrar o pedido."
+            });
         }
 
-        return res.status(200).json({
-            sucesso: true,
-            mensagem: "API conectada ao Supabase."
-        });
+        return res.status(201).json(resultado);
 
     } catch (error) {
         console.error("Erro na API:", error);
 
         return res.status(500).json({
             sucesso: false,
-            mensagem: "Não foi possível conectar ao banco."
+            mensagem: "Erro interno ao registrar o pedido."
         });
     }
 }
