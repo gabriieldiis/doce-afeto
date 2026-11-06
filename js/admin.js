@@ -104,6 +104,7 @@ async function verificarSessao() {
     }
 }
 
+
 function exibirPedidos(pedidos) {
     listaPedidos.innerHTML = '';
 
@@ -116,19 +117,69 @@ function exibirPedidos(pedidos) {
         const card = document.createElement('article');
         card.className = 'pedido-card';
 
+        // Cabeçalho
         const titulo = document.createElement('h3');
         titulo.textContent = `Pedido ${pedido.id}`;
 
         const status = document.createElement('p');
         status.textContent = `Status: ${pedido.status}`;
 
-        const valor = document.createElement('p');
-        valor.textContent = `Total: R$ ${Number(pedido.valor_total).toFixed(2)}`;
-
         const data = document.createElement('p');
         data.textContent = `Data: ${new Date(pedido.criado_em).toLocaleString('pt-BR')}`;
 
-        card.append(titulo, status, valor, data);
+        // Cliente
+        const clienteTitulo = document.createElement('h4');
+        clienteTitulo.textContent = 'Cliente';
+
+        const cliente = Array.isArray(pedido.clientes)
+            ? pedido.clientes[0]
+            : pedido.clientes;
+
+        const nomeCliente = document.createElement('p');
+        nomeCliente.textContent = `Nome: ${cliente?.nome || 'Não informado'}`;
+
+        const telefoneCliente = document.createElement('p');
+        telefoneCliente.textContent = `WhatsApp: ${cliente?.telefone || 'Não informado'}`;
+
+        // Itens
+        const itensTitulo = document.createElement('h4');
+        itensTitulo.textContent = 'Produtos';
+
+        const listaItens = document.createElement('ul');
+
+        (pedido.itens_pedido || []).forEach(item => {
+            const li = document.createElement('li');
+
+            const subtotal = Number(item.quantidade) * Number(item.preco_unitario);
+
+            li.textContent =
+                `${item.quantidade}x ${item.nome_produto} — ${subtotal.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                })}`;
+
+            listaItens.appendChild(li);
+        });
+
+        // Total
+        const valor = document.createElement('p');
+        valor.textContent = `Total: ${Number(pedido.valor_total).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        })}`;
+
+        card.append(
+            titulo,
+            status,
+            data,
+            clienteTitulo,
+            nomeCliente,
+            telefoneCliente,
+            itensTitulo,
+            listaItens,
+            valor
+        );
+
         listaPedidos.appendChild(card);
     });
 }
