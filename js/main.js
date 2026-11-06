@@ -209,41 +209,24 @@
     pedidoDialog.close();
   });
 
-  function enviarPedidoJSONP(pedido) {
-    return new Promise(function (resolve, reject) {
-      var callbackName = 'doceAfetoCallback_' + Date.now();
-      var script = document.createElement('script');
-      var encerrado = false;
-      var timeout = setTimeout(function () {
-        finalizar();
-        reject(new Error('O registro demorou mais que o esperado. Tente novamente.'));
-      }, 15000);
+  async function enviarPedidoAPI(pedido) {
+      const response = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(pedido)
+      });
 
-      function finalizar() {
-        if (encerrado) return;
-        encerrado = true;
-        clearTimeout(timeout);
-        script.remove();
-        try { delete window[callbackName]; } catch (_) { window[callbackName] = undefined; }
+      const resultado = await response.json();
+
+      if (!response.ok || !resultado.sucesso) {
+          throw new Error(
+              resultado.mensagem || 'Não foi possível registrar o pedido.'
+          );
       }
 
-      window[callbackName] = function (resposta) {
-        finalizar();
-        if (resposta && resposta.sucesso) resolve(resposta);
-        else reject(new Error((resposta && resposta.mensagem) || 'Não foi possível registrar o pedido.'));
-      };
-
-      script.onerror = function () {
-        finalizar();
-        reject(new Error('Não foi possível acessar o sistema de pedidos.'));
-      };
-
-      var url = GOOGLE_SCRIPT_URL +
-        '?callback=' + encodeURIComponent(callbackName) +
-        '&pedido=' + encodeURIComponent(JSON.stringify(pedido));
-      script.src = url;
-      document.head.appendChild(script);
-    });
+      return resultado;
   }
 
   pedidoForm.addEventListener('submit', async function (e) {
@@ -276,7 +259,7 @@
     pedidoStatus.className = 'pedido-status';
 
     try {
-      var resposta = await enviarPedidoJSONP(pedido);
+      var resposta = await enviarPedidoAPI(pedido);
       var linhas = itensPedido.map(function (item) {
         return '• ' + item.quantidade + 'x ' + item.sabor;
       });
