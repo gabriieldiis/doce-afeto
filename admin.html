@@ -1,42 +1,152 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Administração | Doce Afeto</title>
+
     <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body>
 
-    <main class="admin-container">
+    <!-- LOGIN -->
+    <section id="tela-login" class="login-screen">
+        <div class="login-card">
 
-        <section id="tela-login">
-            <h1>Doce Afeto</h1>
-            <p>Painel administrativo</p>
+            <a href="/" class="brand">
+                <span>doce</span>afeto
+            </a>
+
+            <p class="login-subtitle">Painel administrativo</p>
 
             <form id="form-login">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" required>
 
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" required>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Seu e-mail"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
-                <button type="submit">Entrar</button>
-                <p id="mensagem-login"></p>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        placeholder="Sua senha"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Entrar no painel
+                </button>
+
+                <p id="mensagem-login" class="login-message"></p>
+
             </form>
-        </section>
+        </div>
+    </section>
 
-        <section id="painel-admin" hidden>
-            <header>
-                <h1>Pedidos</h1>
-                <button id="btn-sair" type="button">Sair</button>
+    <!-- PAINEL ADMINISTRATIVO -->
+    <section id="painel-admin" class="admin-app" hidden>
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+                <a href="/" class="brand">
+                    <span>doce</span>afeto
+                </a>
+                <span class="brand-caption">PAINEL ADMINISTRATIVO</span>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <span class="nav-label">GESTÃO</span>
+
+                <a href="#pedidos" class="nav-item active">
+                    <span class="nav-icon">▦</span>
+                    Pedidos
+                </a>
+
+                <a href="#produtos" class="nav-item disabled">
+                    <span class="nav-icon">◇</span>
+                    Produtos
+                    <span class="nav-soon">Em breve</span>
+                </a>
+
+                <a href="#estoque" class="nav-item disabled">
+                    <span class="nav-icon">▤</span>
+                    Estoque
+                    <span class="nav-soon">Em breve</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar">DA</div>
+
+                    <div class="user-info">
+                        <strong>Doce Afeto</strong>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+
+                <button id="btn-sair" class="btn-logout" type="button">
+                    Sair do painel
+                </button>
+            </div>
+
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="topbar">
+                <div>
+                    <span class="breadcrumb">Gestão / Pedidos</span>
+                    <h1>Pedidos</h1>
+                    <p>Acompanhe e gerencie os pedidos da Doce Afeto.</p>
+                </div>
+
+                <div class="topbar-date">
+                    <span class="status-indicator"></span>
+                    Painel conectado
+                </div>
             </header>
 
-            <div id="lista-pedidos"></div>
-        </section>
+            <section id="pedidos" class="orders-section">
 
-    </main>
+                <div class="section-heading">
+                    <div>
+                        <h2>Todos os pedidos</h2>
+                        <p>Pedidos recebidos pela loja.</p>
+                    </div>
+                </div>
+
+                <div id="lista-pedidos" class="orders-list">
+                    <p class="loading-message">Carregando pedidos...</p>
+                </div>
+
+            </section>
+
+            <footer class="admin-footer">
+                <span>Doce Afeto</span>
+                <span>Feito com cuidado, em cada detalhe.</span>
+            </footer>
+
+        </main>
+
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/admin.js"></script>
