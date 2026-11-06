@@ -1,3 +1,61 @@
+
+async function verificarAdministrador(req) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SECRET_KEY;
+
+    const authorization = req.headers.authorization || "";
+    const token = authorization.startsWith("Bearer ")
+        ? authorization.slice(7)
+        : null;
+
+    if (!token) {
+        return null;
+    }
+
+    // 1. Validar o token do usuário no Supabase Auth
+    const authResponse = await fetch(
+        `${supabaseUrl}/auth/v1/user`,
+        {
+            headers: {
+                apikey: supabaseKey,
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    if (!authResponse.ok) {
+        return null;
+    }
+
+    const usuario = await authResponse.json();
+
+    if (!usuario.id) {
+        return null;
+    }
+
+    // 2. Verificar se o usuário está na tabela de administradores
+    const adminResponse = await fetch(
+        `${supabaseUrl}/rest/v1/administradores?select=usuario_id&usuario_id=eq.${usuario.id}&limit=1`,
+        {
+            headers: {
+                apikey: supabaseKey
+            }
+        }
+    );
+
+    if (!adminResponse.ok) {
+        return null;
+    }
+
+    const administradores = await adminResponse.json();
+
+    if (!administradores.length) {
+        return null;
+    }
+
+    return usuario;
+}
+
 export default async function handler(req, res) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SECRET_KEY;
@@ -10,7 +68,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // REGISTRAR PEDIDO
+        // REGISTRAR PEDIDO — ACESSO PÚBLICO
         if (req.method === "POST") {
             const { nome, whatsapp, itens } = req.body || {};
 
@@ -57,14 +115,66 @@ export default async function handler(req, res) {
             return res.status(201).json(resultado);
         }
 
-        // ATUALIZAR STATUS E ESTOQUE
+        // PROTEGER CONSULTAS E ALTERAÇÕES
+        if (req.method === "GET" || req.method === "PATCH") {
+            const usuario = await verificarAdministrador(req);
+
+            if (!usuario) {
+                return res.status(403).json({
+                    sucesso: false,
+                    mensagem: "Acesso não autorizado."
+                });
+            }
+        }
+
+        // CONSULTAR PEDIDOS — SOMENTE ADMINISTRADOR
+        if (req.method === "GET") {
+            const response = await fetch(
+                `${supabaseUrl}/rest/v1/pedidos?select=id,status,valor_total,observacao,criado_em,clientes(nome,telefone),itens_pedido(nome_produto,quantidade,preco_unitario,custo_unitario)&order=criado_em.desc`,
+                {
+                    headers: {
+                        apikey: supabaseKey
+                    }
+                }
+            );
+
+            const resultado = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao consultar pedidos:", resultado);
+
+                return res.status(502).json({
+                    sucesso: false,
+                    mensagem: "Não foi possível consultar os pedidos."
+                });
+            }
+
+            return res.status(200).json({
+                sucesso: true,
+                pedidos: resultado
+            });
+        }
+
+        // ATUALIZAR STATUS E ESTOQUE — SOMENTE ADMINISTRADOR
         if (req.method === "PATCH") {
             const { pedido_id, status } = req.body || {};
 
-            if (!pedido_id || !status) {
+            const statusPermitidos = [
+                "pendente",
+                "confirmado",
+                "em_preparo",
+                "pronto",
+                "concluido",
+                "cancelado"
+            ];
+
+            if (
+                !pedido_id ||
+                !statusPermitidos.includes(status)
+            ) {
                 return res.status(400).json({
                     sucesso: false,
-                    mensagem: "Pedido e status são obrigatórios."
+                    mensagem: "Pedido ou status inválido."
                 });
             }
 
