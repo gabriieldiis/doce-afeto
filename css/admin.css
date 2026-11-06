@@ -490,3 +490,210 @@ button {
         flex-direction: column;
     }
 }
+
+/* NOVA APRESENTAÇÃO DOS PEDIDOS */
+
+.orders-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.pedido-card {
+    min-width: 0;
+    padding: 26px;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: 5px;
+    box-shadow: 0 8px 25px rgba(53, 23, 15, .035);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.pedido-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(53, 23, 15, .07);
+}
+
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--linha);
+}
+
+.pedido-identificacao {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+}
+
+.pedido-identificacao h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    overflow-wrap: anywhere;
+}
+
+.pedido-data {
+    color: var(--suave);
+    font-size: .76rem;
+}
+
+.status-badge {
+    flex-shrink: 0;
+    padding: 7px 11px;
+    border-radius: 3px;
+    font-size: .7rem;
+    font-weight: 800;
+}
+
+.status-pendente {
+    background: #F7EBD5;
+    color: #94651D;
+}
+
+.status-confirmado {
+    background: #E4EFE3;
+    color: #426C45;
+}
+
+.status-em_preparo {
+    background: #E8E5F3;
+    color: #63558B;
+}
+
+.status-pronto {
+    background: #DDECEB;
+    color: #356C68;
+}
+
+.status-concluido {
+    background: #E8E8E4;
+    color: #5E6259;
+}
+
+.status-cancelado {
+    background: #F5E1DE;
+    color: #A13D32;
+}
+
+.pedido-section {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--linha);
+}
+
+.pedido-section h4 {
+    margin: 0 0 12px;
+    color: var(--suave);
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.cliente-nome {
+    margin: 0 0 5px !important;
+    color: var(--chocolate) !important;
+    font-size: .95rem !important;
+    font-weight: 800;
+}
+
+.cliente-telefone {
+    margin: 0 !important;
+    color: var(--suave);
+    font-size: .8rem !important;
+}
+
+.pedido-produtos {
+    display: grid;
+    gap: 11px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pedido-produtos li {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    color: var(--texto);
+    font-size: .84rem;
+}
+
+.produto-quantidade {
+    color: var(--cobre);
+    font-weight: 800;
+}
+
+.produto-nome {
+    overflow-wrap: anywhere;
+}
+
+.produto-preco {
+    color: var(--suave);
+    font-size: .8rem;
+    white-space: nowrap;
+}
+
+.pedido-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 20px;
+    color: var(--suave);
+    font-size: .8rem;
+}
+
+.pedido-footer strong {
+    color: var(--chocolate);
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 65px 20px;
+    border: 1px dashed var(--caramelo);
+    text-align: center;
+    background: var(--branco);
+}
+
+.empty-icon {
+    color: var(--cobre);
+    font-size: 2rem;
+}
+
+.empty-state h3 {
+    margin: 12px 0 6px;
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.empty-state p {
+    color: var(--suave);
+    font-size: .85rem;
+}
+
+@media (max-width: 1100px) {
+    .orders-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .pedido-card {
+        padding: 20px;
+    }
+
+    .pedido-header {
+        flex-wrap: wrap;
+    }
+}
