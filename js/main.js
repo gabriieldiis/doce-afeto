@@ -188,6 +188,7 @@
     pedidoDialog.close();
   });
 
+<<<<<<< HEAD
   function enviarPedidoJSONP(dados) {
     return new Promise(function (resolve, reject) {
       var callbackName = 'doceAfetoCallback_' + Date.now();
@@ -197,15 +198,26 @@
         finalizar();
         reject(new Error('O registro demorou mais que o esperado. Tente novamente.'));
       }, 15000);
+=======
+  async function enviarPedidoAPI(pedido) {
+      const response = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(pedido)
+      });
+>>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
 
-      function finalizar() {
-        if (encerrado) return;
-        encerrado = true;
-        clearTimeout(timeout);
-        script.remove();
-        try { delete window[callbackName]; } catch (_) { window[callbackName] = undefined; }
+      const resultado = await response.json();
+
+      if (!response.ok || !resultado.sucesso) {
+          throw new Error(
+              resultado.mensagem || 'Não foi possível registrar o pedido.'
+          );
       }
 
+<<<<<<< HEAD
       window[callbackName] = function (resposta) {
         finalizar();
         if (resposta && resposta.sucesso) resolve(resposta);
@@ -222,6 +234,9 @@
         '&pedido=' + encodeURIComponent(JSON.stringify(dados));
       document.head.appendChild(script);
     });
+=======
+      return resultado;
+>>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
   }
 
   pedidoForm.addEventListener('submit', async function (e) {
@@ -250,8 +265,15 @@
     pedidoStatus.className = 'pedido-status';
 
     try {
+<<<<<<< HEAD
       var resposta = await enviarPedidoJSONP({ nome: nome, whatsapp: whatsapp, itens: itensPedido });
       var linhas = itensPedido.map(function (item) { return '• ' + item.quantidade + 'x ' + item.sabor; });
+=======
+      var resposta = await enviarPedidoAPI(pedido);
+      var linhas = itensPedido.map(function (item) {
+        return '• ' + item.quantidade + 'x ' + item.sabor;
+      });
+>>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
       var msg = 'Olá! Acabei de registrar um pedido na Doce Afeto.\n' +
         'Código: ' + resposta.codigo + '\n' +
         'Nome: ' + nome + '\n' +
