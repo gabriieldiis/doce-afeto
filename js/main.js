@@ -3,15 +3,57 @@
   var CENTAVOS = 499; // preço por trufa: R$ 4,99
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuupd3EW8wqSr2npvvUiVxpEgJGKN1x_r1HXTH5yBDjlRQSC-rH-_00JFXR23MZ1pV/exec";
 
+  /* Sabores (slug -> nome). A ordem aqui é a ordem do resumo e da mensagem do pedido. */
+  var SABORES = {
+    'tradicional': 'Tradicional',
+    'meio-amargo': 'Meio Amargo',
+    'brigadeiro': 'Brigadeiro',
+    'maracuja': 'Maracujá',
+    'limao': 'Limão',
+    'cereja': 'Cereja',
+    'prestigio': 'Prestígio'
+  };
+
+  /* Caminho até a home: "" na index, "../" nas páginas de sabor (data-base no <body>) */
+  var BASE = document.body.dataset.base || '';
+  var LINK_SABORES = BASE ? BASE + 'index.html#sabores' : '#sabores';
+
   /* Header: ganha fundo ao rolar */
   var topo = document.getElementById('topo');
   var marcarTopo = function () { topo.classList.toggle('rolou', window.scrollY > 8); };
   marcarTopo();
   window.addEventListener('scroll', marcarTopo, { passive: true });
 
-  var lista = document.getElementById('lista-sabores');
-  if (!lista) return;
-  var cards = Array.prototype.slice.call(lista.querySelectorAll('.sabor'));
+  /* ---------- Pedido (fica salvo no navegador para valer em todas as páginas) ---------- */
+  var CHAVE = 'doceafeto:pedido';
+  var pedido = ler();
+
+  function ler() {
+    try {
+      var bruto = JSON.parse(localStorage.getItem(CHAVE)) || {};
+      var limpo = {};
+      Object.keys(SABORES).forEach(function (s) {
+        var q = Math.max(0, Math.min(99, parseInt(bruto[s], 10) || 0));
+        if (q) limpo[s] = q;
+      });
+      return limpo;
+    } catch (_) { return {}; }
+  }
+  function salvar() {
+    try { localStorage.setItem(CHAVE, JSON.stringify(pedido)); } catch (_) { /* sem armazenamento: o pedido vale só nesta página */ }
+  }
+  function qtd(slug) { return pedido[slug] || 0; }
+  function mudar(slug, delta) {
+    var q = Math.max(0, Math.min(99, qtd(slug) + delta));
+    if (q) pedido[slug] = q; else delete pedido[slug];
+    salvar();
+    atualizar();
+  }
+  function itens() {
+    return Object.keys(SABORES).filter(function (s) { return qtd(s) > 0; })
+      .map(function (s) { return { slug: s, sabor: SABORES[s], quantidade: qtd(s) }; });
+  }
+
   var barra = document.getElementById('barra');
   var totalEl = document.getElementById('total');
   var qtdEl = document.getElementById('qtd');
@@ -22,167 +64,108 @@
   var brl = function (c) { return (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
   var waIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3 1 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>';
 
-  /* ---------- Detalhe (dialog) ---------- */
-  var dlg = document.getElementById('detalhe');
-  var dSlides = document.getElementById('detalhe-slides');
-  var dNome = document.getElementById('detalhe-nome');
-  var dDesc = document.getElementById('detalhe-desc');
-  var dPapel = document.getElementById('detalhe-papel');
-  var dAcao = document.getElementById('detalhe-acao');
-  var dLegenda = document.getElementById('detalhe-legenda');
-  var dPontos = dlg.querySelectorAll('.detalhe-pontos button');
-  var dSetas = dlg.querySelectorAll('.seta');
-  var legendas = ['A trufa por dentro', 'Referência de tamanho'];
-  var cardAberto = null;
-  var origemFoco = null;
-
-  function qtdDe(li) { return +li.querySelector('output').value; }
+  /* Blocos com botões de quantidade: cards da home (.sabor) e a página do sabor (.produto-acao) */
+  var blocos = Array.prototype.slice.call(document.querySelectorAll('[data-slug]'));
 
   function atualizar() {
-    var linhas = [], qtd = 0;
-    cards.forEach(function (li) {
-      var q = qtdDe(li);
-      li.classList.toggle('ativo', q > 0);
-      li.querySelector('.no-pedido').textContent = q > 0 ? q + ' no pedido' : '';
-      if (q > 0) { linhas.push(q + 'x ' + li.dataset.sabor); qtd += q; }
+    blocos.forEach(function (el) {
+      var q = qtd(el.dataset.slug);
+      el.classList.toggle('ativo', q > 0);
+      var out = el.querySelector('output'); if (out) out.value = q;
+      var tag = el.querySelector('.no-pedido'); if (tag) tag.textContent = q > 0 ? q + ' no pedido' : '';
     });
-    if (cardAberto) {
-      var qa = qtdDe(cardAberto);
-      dAcao.classList.toggle('ativo', qa > 0);
-      dAcao.querySelector('output').value = qa;
-    }
-    var total = qtd * CENTAVOS;
-    barra.classList.toggle('vazia', qtd === 0);
 
-    if (qtd === 0) {
+    var lista = itens();
+    var total = lista.reduce(function (s, i) { return s + i.quantidade; }, 0);
+    barra.classList.toggle('vazia', total === 0);
+
+    if (total === 0) {
       itensEl.textContent = 'Seu pedido está vazio';
       enviar.className = 'btn btn-linha';
-      enviar.href = '#sabores';
-      enviar.removeAttribute('target');
+      enviar.href = LINK_SABORES;
       enviarTxt.textContent = 'Escolher sabores';
       var ic = enviar.querySelector('svg'); if (ic) ic.remove();
-      topoPedido.href = '#sabores';
-      topoPedido.removeAttribute('target');
+      topoPedido.href = LINK_SABORES;
       topoPedido.textContent = 'Fazer pedido';
       return;
     }
 
-    totalEl.textContent = brl(total);
-    qtdEl.textContent = qtd + (qtd === 1 ? ' unidade' : ' unidades');
-    itensEl.textContent = linhas.join(', ');
-
-    var msg = 'Olá! Gostaria de fazer um pedido de trufas Doce Afeto:\n\n' +
-      linhas.map(function (l) { return '• ' + l; }).join('\n') +
-      '\n\nTotal: ' + qtd + (qtd === 1 ? ' unidade' : ' unidades') + ', ' + brl(total);
-    var url = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
+    totalEl.textContent = brl(total * CENTAVOS);
+    qtdEl.textContent = total + (total === 1 ? ' unidade' : ' unidades');
+    itensEl.textContent = lista.map(function (i) { return i.quantidade + 'x ' + i.sabor; }).join(', ');
 
     enviar.className = 'btn';
-    enviar.href = url; enviar.target = '_blank'; enviar.rel = 'noopener';
+    enviar.href = '#';
     enviarTxt.innerHTML = 'Finalizar<span class="so-largo"> pedido</span>';
     if (!enviar.querySelector('svg')) enviar.insertAdjacentHTML('afterbegin', waIcon);
-    topoPedido.href = url; topoPedido.target = '_blank'; topoPedido.rel = 'noopener';
-    topoPedido.textContent = 'Finalizar (' + qtd + ')';
+    topoPedido.href = '#';
+    topoPedido.textContent = 'Finalizar (' + total + ')';
   }
 
-  function mudar(li, delta) {
-    var out = li.querySelector('output');
-    out.value = Math.max(0, Math.min(99, +out.value + delta));
-    atualizar();
-  }
-
-  /* Cliques nos cards: quantidade ou abrir detalhe */
-  lista.addEventListener('click', function (e) {
-    var li = e.target.closest('.sabor');
-    if (!li) return;
+  /* Cliques em + / − / Adicionar, em qualquer bloco */
+  document.addEventListener('click', function (e) {
     var btn = e.target.closest('button[data-acao]');
-    if (btn) {
-      var veioDoAdd = btn.classList.contains('add');
-      mudar(li, btn.dataset.acao === '+' ? 1 : -1);
-      if (veioDoAdd) li.querySelector('.stepper [data-acao="+"]').focus();
-      else if (qtdDe(li) === 0) li.querySelector('.add').focus();
-      return;
-    }
-    if (e.target.closest('.abrir') || e.target.closest('.sabor-galeria')) abrir(li, e.target.closest('.abrir') || li.querySelector('.abrir'));
+    if (!btn) return;
+    var bloco = btn.closest('[data-slug]');
+    if (!bloco) return;
+    var slug = bloco.dataset.slug;
+    var veioDoAdd = btn.classList.contains('add');
+    mudar(slug, btn.dataset.acao === '+' ? 1 : -1);
+    if (veioDoAdd) bloco.querySelector('.stepper [data-acao="+"]').focus();
+    else if (qtd(slug) === 0) bloco.querySelector('.add').focus();
   });
 
-  /* Mini slider dos cards: pontos acompanham o arraste; no desktop o mouse mostra a foto na mão */
+  /* Pedido alterado em outra aba, ou página voltando do histórico: relê o que está salvo */
+  window.addEventListener('storage', function (e) { if (e.key === CHAVE) { pedido = ler(); atualizar(); } });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { pedido = ler(); atualizar(); } });
+
+  /* ---------- Cards da home: mini slider e clique na foto abre a página do sabor ---------- */
   var temHover = window.matchMedia('(hover: hover)').matches;
-  cards.forEach(function (li) {
+  document.querySelectorAll('.sabor').forEach(function (li) {
     var sl = li.querySelector('.slides');
     var pts = li.querySelectorAll('.pontos i');
     var marcar = function () {
-      var i = Math.round(sl.scrollLeft / sl.clientWidth);
+      var i = Math.round(sl.scrollLeft / Math.max(1, sl.clientWidth));
       pts.forEach(function (p, k) { p.classList.toggle('on', k === i); });
     };
     sl.addEventListener('scroll', marcar, { passive: true });
     marcar();
+    var gal = li.querySelector('.sabor-galeria');
+    gal.addEventListener('click', function () { window.location.href = li.querySelector('.abrir').href; });
     if (temHover) {
-      var gal = li.querySelector('.sabor-galeria');
       gal.addEventListener('mouseenter', function () { sl.scrollTo({ left: sl.clientWidth }); });
       gal.addEventListener('mouseleave', function () { sl.scrollTo({ left: 0 }); });
     }
   });
 
-  /* Slider do detalhe */
-  function fotoAtual() { return Math.round(dSlides.scrollLeft / Math.max(1, dSlides.clientWidth)); }
-  function irPara(i) { dSlides.scrollTo({ left: i * dSlides.clientWidth }); }
-  function marcarDetalhe() {
-    var i = fotoAtual();
-    dPontos.forEach(function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
-    dSetas[0].disabled = i === 0;
-    dSetas[1].disabled = i === dPontos.length - 1;
-    dLegenda.textContent = legendas[i] || '';
-  }
-  dSlides.addEventListener('scroll', marcarDetalhe, { passive: true });
-  dPontos.forEach(function (b) { b.addEventListener('click', function () { irPara(+b.dataset.foto); }); });
-  dSetas.forEach(function (b) { b.addEventListener('click', function () { irPara(fotoAtual() + +b.dataset.ir); }); });
-  dSlides.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight') { e.preventDefault(); irPara(fotoAtual() + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(fotoAtual() - 1); }
-  });
-
-  function abrir(li, origem) {
-    cardAberto = li;
-    origemFoco = origem || null;
-    var nome = li.dataset.sabor;
-    dNome.textContent = nome;
-    dDesc.textContent = li.querySelector('.sabor-desc').textContent;
-    dPapel.textContent = 'Vem embrulhada individualmente em papel metalizado ' + li.dataset.papel + '.';
-    dAcao.querySelector('.add').setAttribute('aria-label', 'Adicionar ' + nome + ' ao pedido');
-    dAcao.querySelector('[data-acao="-"]').setAttribute('aria-label', 'Remover uma ' + nome);
-    dAcao.querySelector('.stepper [data-acao="+"]').setAttribute('aria-label', 'Adicionar mais uma ' + nome);
-    dSlides.innerHTML = '';
-    li.querySelectorAll('.slides img').forEach(function (img) {
-      var c = img.cloneNode();
-      c.removeAttribute('loading');
-      c.sizes = '(min-width: 960px) 480px, 100vw';
-      dSlides.appendChild(c);
+  /* ---------- Galeria da página do sabor ---------- */
+  var gSlides = document.getElementById('produto-slides');
+  if (gSlides) {
+    var gal = gSlides.closest('.detalhe-galeria');
+    var gPontos = gal.querySelectorAll('.detalhe-pontos button');
+    var gSetas = gal.querySelectorAll('.seta');
+    var gLegenda = gal.querySelector('.detalhe-legenda');
+    var legendas = ['A trufa por dentro', 'Referência de tamanho'];
+    var fotoAtual = function () { return Math.round(gSlides.scrollLeft / Math.max(1, gSlides.clientWidth)); };
+    var irPara = function (i) { gSlides.scrollTo({ left: i * gSlides.clientWidth }); };
+    var marcarGaleria = function () {
+      var i = fotoAtual();
+      gPontos.forEach(function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      gSetas[0].disabled = i === 0;
+      gSetas[1].disabled = i === gPontos.length - 1;
+      gLegenda.textContent = legendas[i] || '';
+    };
+    gSlides.addEventListener('scroll', marcarGaleria, { passive: true });
+    gPontos.forEach(function (b) { b.addEventListener('click', function () { irPara(+b.dataset.foto); }); });
+    gSetas.forEach(function (b) { b.addEventListener('click', function () { irPara(fotoAtual() + +b.dataset.ir); }); });
+    gSlides.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); irPara(fotoAtual() + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(fotoAtual() - 1); }
     });
-    atualizar();
-    document.body.classList.add('modal-aberto');
-    dlg.showModal();
-    dSlides.scrollLeft = 0;
-    marcarDetalhe();
+    marcarGaleria();
   }
-  function fechar() { dlg.close(); }
-  dlg.addEventListener('close', function () {
-    document.body.classList.remove('modal-aberto');
-    cardAberto = null;
-    if (origemFoco) origemFoco.focus();
-  });
-  document.getElementById('detalhe-fechar').addEventListener('click', fechar);
-  dlg.addEventListener('click', function (e) { if (e.target === dlg) fechar(); });
-  dAcao.addEventListener('click', function (e) {
-    var btn = e.target.closest('button[data-acao]');
-    if (!btn || !cardAberto) return;
-    var veioDoAdd = btn.classList.contains('add');
-    mudar(cardAberto, btn.dataset.acao === '+' ? 1 : -1);
-    if (veioDoAdd) dAcao.querySelector('.stepper [data-acao="+"]').focus();
-    else if (qtdDe(cardAberto) === 0) dAcao.querySelector('.add').focus();
-  });
 
-
-  /* Finalização: identifica o cliente, registra no Apps Script e então abre o WhatsApp. */
+  /* ---------- Finalização: identifica o cliente, registra no Apps Script e então abre o WhatsApp ---------- */
   var pedidoDialog = document.getElementById('pedido-dialog');
   var pedidoForm = document.getElementById('pedido-form');
   var pedidoStatus = document.getElementById('pedido-status');
@@ -191,12 +174,8 @@
   var whatsappInput = document.getElementById('cliente-whatsapp');
 
   function abrirFinalizacao(e) {
-    if (e) e.preventDefault();
-    var temItem = cards.some(function (li) { return qtdDe(li) > 0; });
-    if (!temItem) {
-      document.getElementById('sabores').scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
+    if (!itens().length) return; // pedido vazio: o link segue para os sabores
+    e.preventDefault();
     pedidoStatus.textContent = '';
     pedidoStatus.className = 'pedido-status';
     pedidoDialog.showModal();
@@ -209,7 +188,7 @@
     pedidoDialog.close();
   });
 
-  function enviarPedidoJSONP(pedido) {
+  function enviarPedidoJSONP(dados) {
     return new Promise(function (resolve, reject) {
       var callbackName = 'doceAfetoCallback_' + Date.now();
       var script = document.createElement('script');
@@ -238,10 +217,9 @@
         reject(new Error('Não foi possível acessar o sistema de pedidos.'));
       };
 
-      var url = GOOGLE_SCRIPT_URL +
+      script.src = GOOGLE_SCRIPT_URL +
         '?callback=' + encodeURIComponent(callbackName) +
-        '&pedido=' + encodeURIComponent(JSON.stringify(pedido));
-      script.src = url;
+        '&pedido=' + encodeURIComponent(JSON.stringify(dados));
       document.head.appendChild(script);
     });
   }
@@ -256,10 +234,7 @@
       return;
     }
 
-    var itensPedido = cards.map(function (li) {
-      return { sabor: li.dataset.sabor, quantidade: qtdDe(li) };
-    }).filter(function (item) { return item.quantidade > 0; });
-
+    var itensPedido = itens().map(function (i) { return { sabor: i.sabor, quantidade: i.quantidade }; });
     if (!itensPedido.length) {
       pedidoStatus.textContent = 'Seu pedido está vazio.';
       pedidoStatus.className = 'pedido-status erro';
@@ -268,7 +243,6 @@
 
     var quantidade = itensPedido.reduce(function (soma, item) { return soma + item.quantidade; }, 0);
     var total = quantidade * CENTAVOS;
-    var pedido = { nome: nome, whatsapp: whatsapp, itens: itensPedido };
 
     pedidoConfirmar.disabled = true;
     pedidoConfirmar.textContent = 'Registrando...';
@@ -276,10 +250,8 @@
     pedidoStatus.className = 'pedido-status';
 
     try {
-      var resposta = await enviarPedidoJSONP(pedido);
-      var linhas = itensPedido.map(function (item) {
-        return '• ' + item.quantidade + 'x ' + item.sabor;
-      });
+      var resposta = await enviarPedidoJSONP({ nome: nome, whatsapp: whatsapp, itens: itensPedido });
+      var linhas = itensPedido.map(function (item) { return '• ' + item.quantidade + 'x ' + item.sabor; });
       var msg = 'Olá! Acabei de registrar um pedido na Doce Afeto.\n' +
         'Código: ' + resposta.codigo + '\n' +
         'Nome: ' + nome + '\n' +
@@ -291,6 +263,10 @@
       var url = 'https://wa.me/' + FONE + '?text=' + encodeURIComponent(msg);
       pedidoStatus.textContent = 'Pedido registrado! Abrindo o WhatsApp...';
       pedidoStatus.className = 'pedido-status sucesso';
+      // Pedido registrado: esvazia para não ficar salvo no navegador
+      pedido = {};
+      salvar();
+      atualizar();
       window.location.href = url;
       pedidoDialog.close();
     } catch (erro) {
