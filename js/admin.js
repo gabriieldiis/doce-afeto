@@ -1,4 +1,15 @@
 
+  console.log([
+    '',
+    '██████╗░██╗░█████╗░░██████╗',
+    '██╔══██╗██║██╔══██╗██╔════╝',
+    '██║░░██║██║███████║╚█████╗░',
+    '██║░░██║██║██╔══██║░╚═══██╗',
+    '██████╔╝██║██║░░██║██████╔╝',
+    '╚═════╝░╚═╝╚═╝░░╚═╝╚═════╝░',
+    ''
+  ].join('\n'));
+
 const SUPABASE_URL = 'https://jddhsrsnixybdocubgot.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_QcPS95nG--TC3PaDaZwc8w_jDgoz9cM';
 
