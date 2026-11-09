@@ -1,7 +1,6 @@
 (function () {
   var FONE = '5511964562656';
   var CENTAVOS = 499; // preço por trufa: R$ 4,99
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuupd3EW8wqSr2npvvUiVxpEgJGKN1x_r1HXTH5yBDjlRQSC-rH-_00JFXR23MZ1pV/exec";
 
   /* Sabores (slug -> nome). A ordem aqui é a ordem do resumo e da mensagem do pedido. */
   var SABORES = {
@@ -188,55 +187,30 @@
     pedidoDialog.close();
   });
 
-<<<<<<< HEAD
-  function enviarPedidoJSONP(dados) {
-    return new Promise(function (resolve, reject) {
-      var callbackName = 'doceAfetoCallback_' + Date.now();
-      var script = document.createElement('script');
-      var encerrado = false;
-      var timeout = setTimeout(function () {
-        finalizar();
-        reject(new Error('O registro demorou mais que o esperado. Tente novamente.'));
-      }, 15000);
-=======
-  async function enviarPedidoAPI(pedido) {
-      const response = await fetch('/api/pedidos', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(pedido)
+  /* Registra o pedido na API (/api/pedidos -> Supabase) e devolve o código do pedido */
+  async function enviarPedidoAPI(dados) {
+    var response;
+    try {
+      response = await fetch(BASE + 'api/pedidos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
       });
->>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
+    } catch (_) {
+      throw new Error('Não foi possível acessar o sistema de pedidos. Verifique sua conexão.');
+    }
 
-      const resultado = await response.json();
+    var resultado = null;
+    try { resultado = await response.json(); } catch (_) { /* resposta sem JSON */ }
 
-      if (!response.ok || !resultado.sucesso) {
-          throw new Error(
-              resultado.mensagem || 'Não foi possível registrar o pedido.'
-          );
-      }
+    if (!response.ok || (resultado && resultado.sucesso === false)) {
+      throw new Error((resultado && resultado.mensagem) || 'Não foi possível registrar o pedido.');
+    }
 
-<<<<<<< HEAD
-      window[callbackName] = function (resposta) {
-        finalizar();
-        if (resposta && resposta.sucesso) resolve(resposta);
-        else reject(new Error((resposta && resposta.mensagem) || 'Não foi possível registrar o pedido.'));
-      };
-
-      script.onerror = function () {
-        finalizar();
-        reject(new Error('Não foi possível acessar o sistema de pedidos.'));
-      };
-
-      script.src = GOOGLE_SCRIPT_URL +
-        '?callback=' + encodeURIComponent(callbackName) +
-        '&pedido=' + encodeURIComponent(JSON.stringify(dados));
-      document.head.appendChild(script);
-    });
-=======
-      return resultado;
->>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
+    // O RPC pode devolver um objeto, uma lista com um objeto ou só o id
+    var r = Array.isArray(resultado) ? resultado[0] : resultado;
+    var codigo = r && typeof r === 'object' ? (r.codigo || r.pedido_id || r.id || '') : (r || '');
+    return { codigo: String(codigo) };
   }
 
   pedidoForm.addEventListener('submit', async function (e) {
@@ -265,17 +239,10 @@
     pedidoStatus.className = 'pedido-status';
 
     try {
-<<<<<<< HEAD
-      var resposta = await enviarPedidoJSONP({ nome: nome, whatsapp: whatsapp, itens: itensPedido });
+      var resposta = await enviarPedidoAPI({ nome: nome, whatsapp: whatsapp, itens: itensPedido });
       var linhas = itensPedido.map(function (item) { return '• ' + item.quantidade + 'x ' + item.sabor; });
-=======
-      var resposta = await enviarPedidoAPI(pedido);
-      var linhas = itensPedido.map(function (item) {
-        return '• ' + item.quantidade + 'x ' + item.sabor;
-      });
->>>>>>> e3e3912c5768320f241906890f661955c49b1ac6
       var msg = 'Olá! Acabei de registrar um pedido na Doce Afeto.\n' +
-        'Código: ' + resposta.codigo + '\n' +
+        (resposta.codigo ? 'Código: ' + resposta.codigo + '\n' : '') +
         'Nome: ' + nome + '\n' +
         'WhatsApp: ' + whatsapp + '\n\n' +
         linhas.join('\n') + '\n\n' +
